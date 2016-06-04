@@ -1,15 +1,29 @@
 package project.mosis.volunteerneeded;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+
+    private GoogleMap googleMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map));
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -48,5 +66,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+
+        googleMap = map;
+        setUpMap();
+
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener(){
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                makeVolunteerCall(latLng);
+
+            }
+        });
+    }
+
+    private void makeVolunteerCall(LatLng latLng)
+    {}
+
+
+
+
+    private void setUpMap(){
+
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+
+        int locationCheck = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(locationCheck == PackageManager.PERMISSION_GRANTED)
+            googleMap.setMyLocationEnabled(true);
+        else
+            googleMap.setMyLocationEnabled(true);
+
+
+        googleMap.setTrafficEnabled(true);
+        googleMap.setIndoorEnabled(true);
+        googleMap.setBuildingsEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
     }
 }
