@@ -3,5 +3,13 @@
     <string name="action_settings">Settings</string>
     <string name="add_friend">New Friend</string>
     <string name="friends">Friends</string>
-    <string name="search">Search</string>
+    <string name="search">Search Events</string>
+    <string name="add_event">Add Event</string>
+
+    <string name="prompt_title">Title</string>
+    <string name="prompt_description">Description</string>
+
+
+    <string name="no_account">No account yet? Create one</string>
+    <string name="camera_maybe">Take it with camera?</string>
 </resources>
