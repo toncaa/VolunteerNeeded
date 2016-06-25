@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,7 +42,6 @@ public class VolunteerEventActivity extends AppCompatActivity {
     private Button postNewEvent;
     private String lon, lat;
     private Bitmap eventPhoto;
-
 
     //////////////
     Handler guiThread;
@@ -117,12 +121,16 @@ public class VolunteerEventActivity extends AppCompatActivity {
        String desc = descView.getText().toString();
         int numOfVolunteers = numPicker.getValue();
 
-        VolunteerEvent vEvent = new VolunteerEvent(title,lon,lat,desc,numOfVolunteers,eventPhoto);
+        String organizer = getUsername();
+        VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,numOfVolunteers,eventPhoto);
 
        // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();
-
         return VolunteerHTTPHelper.addNewVolunteerEvent(vEvent);
+    }
 
+    private String getUsername(){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getString(getString(R.string.sp_username), "");
     }
 
     @Override
@@ -186,4 +194,73 @@ public class VolunteerEventActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Represents an asynchronous addEvent task used to authenticate
+     * the user.
+     */
+    private class AddEventTask extends AsyncTask<Void, Void, Boolean> {
+
+        private VolunteerEvent event;
+
+        AddEventTask(VolunteerEvent event) {
+            this.event = event;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(context,getString(R.string.adding_event),"Pleas wait", true);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            String serverResponse = VolunteerHTTPHelper.addEvent(event);
+
+            try {
+                String resMsg = (new JSONObject(serverResponse)).getString("msg");
+                if(!resMsg.equals("OK")) {
+                    return false;
+                }else{
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            //return value is parameter for onPostEecute method
+            // TODO: register the new account here.
+            //  return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            progressDialog.dismiss();
+            if (success) {
+                //TODO:reload markers
+                finish();
+                startMainAcivity();
+            } else {
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            progressDialog.dismiss();
+        }
+
+        public void saveUsername(String username){
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.putString(getString(R.string.sp_username), username);
+        }
+
+        private void startMainAcivity(){
+            Intent i = new Intent(context, MainActivity.class);
+            startActivity(i);
+        }
+    }
 }

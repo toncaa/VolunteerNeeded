@@ -3,7 +3,9 @@ package project.mosis.volunteerneeded;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -68,10 +70,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private View registerMaybeView;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        context = this;
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
         populateAutoComplete();
@@ -348,7 +353,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(List<String> emailAddressCollection) {
             addEmailsToAutoComplete(emailAddressCollection);
         }
+
     }
+
+
+
     //create AsyncTaks cause it can not call asynchounus method from ui thread
 
     /**
@@ -366,12 +375,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(context,"onPreExecute",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
         protected Boolean doInBackground(Void... params) {
             String serverResponse = VolunteerHTTPHelper.loginUser(mUsername,mPassword);
 
             try {
                 String resMsg = (new JSONObject(serverResponse)).getString("msg");
                 if(!resMsg.equals("OK")) {
+                    Toast.makeText(context,resMsg,Toast.LENGTH_SHORT).show();
                     return false;
                 }else{
                     return true;
@@ -392,6 +408,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                saveUsername(mUsername);
                 finish();
                 startMainAcivity();
             } else {
@@ -405,6 +422,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+
+        public void saveUsername(String username){
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.putString(getString(R.string.sp_username), username);
+        }
     }
+
+
 }
 

@@ -2,12 +2,15 @@ package project.mosis.volunteerneeded;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by MilanToncic on 6/5/2016.
  */
 public class VolunteerEvent {
 
-
+    private String organizerUsername;
     private String title;
     private String desc;
     private int points;
@@ -18,8 +21,9 @@ public class VolunteerEvent {
     private String lat;
     private String lon;
 
-    public VolunteerEvent(String title,String lon, String lat, String desc, int volunteersNeeded, Bitmap image)
+    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc, int volunteersNeeded, Bitmap image)
     {
+        this.organizerUsername = organizerUsername;
         this.title = title;
         this.desc = desc;
         this.lon = lon;
@@ -67,6 +71,17 @@ public class VolunteerEvent {
     public String getLongitude()
     {
         return this.lon;
+    }
+
+    public String getOrganizerUsername(){ return this.organizerUsername; }
+    public String toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("title",title);
+        json.put("desc",desc);
+        json.put("lat",lat);
+        json.put("lon",lon);
+        json.put("volNeeded",volunteersNeeded);
+        return json.toString();
     }
 
 

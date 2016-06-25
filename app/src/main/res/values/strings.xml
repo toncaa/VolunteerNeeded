@@ -40,4 +40,9 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_friend">AddFriendActivity</string>
 
+    <!--for shared preferences-->
+    <string name="sp_username">username</string>
+
+    <string name="adding_event">Adding event</string>
+
 </resources>
