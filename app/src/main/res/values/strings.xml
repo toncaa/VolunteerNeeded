@@ -1,15 +1,48 @@
 <resources>
     <string name="app_name">VolunteerNeeded</string>
     <string name="action_settings">Settings</string>
-    <string name="add_friend">New Friend</string>
-    <string name="friends">Friends</string>
-    <string name="search">Search Events</string>
     <string name="add_event">Add Event</string>
 
-    <string name="prompt_title">Title</string>
-    <string name="prompt_description">Description</string>
 
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_fullname">Full Name</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_phone">Phone</string>
+
+    <string name="register_btn">Register</string>
+    <string name="title_activity_register">Registration</string>
 
     <string name="no_account">No account yet? Create one</string>
     <string name="camera_maybe">Take it with camera?</string>
+
+    <string name="add_friend">New Friend</string>
+    <string name="friends">Friends</string>
+    <string name="search">Search</string>
+    <string name="add_trash_object">Add</string>
+    <string name="search_trash_object">Search</string>
+
+    <string name="prompt_title">Title</string>
+    <string name="prompt_radius">In radius of</string>
+    <string name="prompt_description">Description</string>
+
+    <!--<string name="action_sign_in">Sign in or register</string>-->
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_username">This username address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_add_friend">AddFriendActivity</string>
+
+    <!--for shared preferences-->
+    <string name="sp_username">username</string>
+
+    <string name="adding_event">Adding event</string>
+
 </resources>

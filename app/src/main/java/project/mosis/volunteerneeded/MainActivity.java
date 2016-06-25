@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
 
-
     }
 
     @Override
@@ -141,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
         ArrayList<VolunteerEvent> places = VolunteerEventsData.getInstance().getVolunteerEvents();
         markerEventIdMap = new HashMap<Marker, Integer>((int)((double)places.size()*1.2));
+
         for (int i=0;i<places.size();i++)
         {
             VolunteerEvent event = places.get(i);
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onLocationChanged(Location location) {
             // TODO Auto-generated method stub
-            Toast.makeText(MainActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(MainActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
             // update your marker here
         }
 
