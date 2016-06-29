@@ -45,4 +45,16 @@
 
     <string name="adding_event">Adding event</string>
 
+
+    <!-- Bluetooth -->
+    <string name="button_connect">Connect</string>
+    <string name="button_disconnect">Disconnect</string>
+    <string name="title_devices">Devices</string>
+    <string name="scan">Scan</string>
+    <string name="become_server">Listen</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

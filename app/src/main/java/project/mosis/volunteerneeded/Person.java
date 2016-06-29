@@ -44,5 +44,15 @@ public class Person {
         loc = new LatLng(21.9126,43.3189);
     }
 
+    public LatLng getLatLng(){return this.loc;}
+    public String getName(){ return this.name; }
+    public Bitmap getImage(){ return this.image; }
+    public VolunteerRank getRank(){ return this.rank; }
+    public int getPoints(){ return this.volunteeringPoints; }
 
+    public String getDescription()
+    {
+        String desc = new String("Rank: " + rank + "\n" + "Points: " + volunteeringPoints + "\n");
+        return desc;
+    }
 }
