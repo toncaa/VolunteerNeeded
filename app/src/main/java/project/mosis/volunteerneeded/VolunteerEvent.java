@@ -15,6 +15,8 @@ public class VolunteerEvent {
     private String desc;
     private int points;
     private int volunteersNeeded;
+    private String category;
+    private String time;
     private Bitmap image;
 
 
@@ -63,10 +65,9 @@ public class VolunteerEvent {
 
     public Bitmap getImage(){return this.image;}
 
-    public String getLatitude()
-    {
-        return this.lat;
-    }
+    public String getTitle(){return this.title; }
+
+    public String getLatitude() { return this.lat; }
 
     public String getLongitude()
     {
@@ -76,13 +77,20 @@ public class VolunteerEvent {
     public String getOrganizerUsername(){ return this.organizerUsername; }
     public String toJSON() throws JSONException {
         JSONObject json = new JSONObject();
+        json.put("organizer", organizerUsername);
         json.put("title",title);
         json.put("desc",desc);
         json.put("lat",lat);
         json.put("lon",lon);
+        json.put("category",category);
         json.put("volNeeded",volunteersNeeded);
+        json.put("time",time);
+        json.put("image",VolunteerHTTPHelper.bitmapToString(image));
         return json.toString();
     }
 
 
+    public String getCategory() {return category;  }
+
+    public String getTime() { return time;   }
 }

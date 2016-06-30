@@ -16,20 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.appdatasearch.Feature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import project.mosis.volunteerneeded.httpTasks.RegisterNewUserTask;
+
 
 public class RegisterActivity extends AppCompatActivity {
 

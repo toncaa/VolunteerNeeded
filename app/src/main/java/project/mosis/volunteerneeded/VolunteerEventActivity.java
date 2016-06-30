@@ -114,23 +114,19 @@ public class VolunteerEventActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
     }
 
-
+    //dodaje event
     private String addNewVolunteerEvent()
     {
-       String title = titleView.getText().toString();
-       String desc = descView.getText().toString();
-        int numOfVolunteers = numPicker.getValue();
+         String title = titleView.getText().toString();
+         String desc = descView.getText().toString();
+         int numOfVolunteers = numPicker.getValue();
 
-        String organizer = getUsername();
-        VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,numOfVolunteers,eventPhoto);
+         String organizer = LocalMemoryManager.getUsername(context);
+         VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,numOfVolunteers,eventPhoto);
 
-       // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();
-        return VolunteerHTTPHelper.addNewVolunteerEvent(vEvent);
-    }
 
-    private String getUsername(){
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        return sharedPref.getString(getString(R.string.sp_username), "");
+         // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();
+         return VolunteerHTTPHelper.addEvent(vEvent);
     }
 
     @Override
@@ -251,12 +247,6 @@ public class VolunteerEventActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
 
-        public void saveUsername(String username){
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            editor.putString(getString(R.string.sp_username), username);
-        }
 
         private void startMainAcivity(){
             Intent i = new Intent(context, MainActivity.class);

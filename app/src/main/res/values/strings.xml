@@ -42,6 +42,7 @@
 
     <!--for shared preferences-->
     <string name="sp_username">username</string>
+    <string name="preference_file_key">project.mosis.preference_file_key</string>
 
     <string name="adding_event">Adding event</string>
 
