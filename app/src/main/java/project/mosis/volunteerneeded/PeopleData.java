@@ -26,7 +26,7 @@ public class PeopleData {
         return singleton;
     }
 
-    public ArrayList<Person> getVolunteerEvents()
+    public ArrayList<Person> getPeople()
     {
         return people;
     }

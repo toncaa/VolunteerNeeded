@@ -1,7 +1,9 @@
 package project.mosis.volunteerneeded;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,11 +15,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,11 +36,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import project.mosis.volunteerneeded.bluetoothscanner.ListActivity;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     private GoogleMap googleMap;
     private HashMap<Marker, Integer> markerEventIdMap;
+    private HashMap<Marker, Integer> friendIdMap;
 
     public LocationManager locationManager;
     public LocationUpdateListener listener;
@@ -79,9 +86,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             intent.putExtra("lat", googleMap.getMyLocation().getLatitude());
             startActivity(intent);
         }
+        else if(id == R.id.add_friend_item)
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle("Add Friend")
+                    .setMessage("To add friend you can listen for requests that other send and accept it or you" +
+                            " can ask your friend to listen and by typing his device add him. So do you want to be a listener?!")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                            intent.putExtra("Listener", true);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                            intent.putExtra("Listener", false);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+
+
+
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     @Override
@@ -91,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setUpMap();
 
         addVolunteerEventMarkers();
+        addFriendPositionsOnMap();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
@@ -157,6 +194,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerEventIdMap.put(marker,i);
         }
     }
+
+    private void addFriendPositionsOnMap()
+    {
+        ArrayList<Person> people = PeopleData.getInstance().getPeople();
+        friendIdMap = new HashMap<Marker, Integer>((int)((double)people.size()*1.2));
+
+        for (int i=0;i<people.size();i++)
+        {
+            Person person = people.get(i);
+            LatLng latLng = person.getLatLng();
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+
+            //ovde trebamo pribaviti sliku osobe i zameniti
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.volunteer_event));
+
+            markerOptions.title(person.getName());
+            markerOptions.snippet(person.getDescription());
+            Marker marker = googleMap.addMarker(markerOptions);
+            markerEventIdMap.put(marker,i);
+        }
+    }
+
 
 
 

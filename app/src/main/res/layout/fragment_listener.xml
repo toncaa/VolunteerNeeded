@@ -1,0 +1,40 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="project.mosis.volunteerneeded.bluetoothscanner.ListActivity">
+
+    <Button
+        android:id="@+id/stop_listening_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:layout_gravity="bottom"
+        android:textColor="#fff"
+        android:textSize="30dp"
+        android:background="#6C79D2"
+        />
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:indeterminate="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Listening..."
+            android:textColor="#767"
+            android:textSize="30dp"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>
