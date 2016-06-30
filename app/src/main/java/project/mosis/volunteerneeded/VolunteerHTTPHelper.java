@@ -28,54 +28,6 @@ public class VolunteerHTTPHelper {
     public static final String SERVER_URL ="http://192.168.1.6:3000";
     private static final int CONNECTION_TIMEOUT = 5000;
 
-    public static String addNewVolunteerEvent(VolunteerEvent vEvent)
-    {
-        String retStr;
-        try{
-            URL url =  new URL(SERVER_URL+"/addEvent");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            // Ono sto saljemo
-            JSONObject holder = new JSONObject();
-            JSONObject data = new JSONObject();
-            data.put("name", vEvent.getName());
-            data.put("desc", vEvent.getDescription());
-            data.put("lon", vEvent.getLongitude());
-            data.put("lat", vEvent.getLatitude());
-            data.put("img",bitmapToString(vEvent.getImage()));//TODO:Puca ako ju null
-            holder.put("vEvent", data);
-            ///////////////////////////////
-
-            conn.setConnectTimeout(CONNECTION_TIMEOUT);
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(holder.toString());
-            writer.flush();
-            writer.close();
-            os.close();
-            //receive response
-            int responseCode = conn.getResponseCode();
-            if(responseCode == HttpURLConnection.HTTP_OK){
-                retStr = inputStreamToString(conn.getInputStream());
-            }
-            else {
-                retStr = String.valueOf("Error:" + responseCode);
-            }
-        }
-        catch (Exception error){
-            error.printStackTrace();
-            retStr = "Error durring upload!";
-        }
-
-        return retStr;
-    }
-
     public static String registerNewUser(String username, String password, String name, String phone, Bitmap img){
         String retStr;
         try {
@@ -164,19 +116,30 @@ public class VolunteerHTTPHelper {
     public static String addEvent(VolunteerEvent event){
         String retStr;
         try {
-            URL url = new URL(SERVER_URL + "/loginUser");
+            URL url = new URL(SERVER_URL + "/addEvent");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
+         //   JSONObject data = new JSONObject();
+        //   data.put("vEvent", event.toJSON());
+
             JSONObject data = new JSONObject();
-            data.put("vEvent", event.toJSON());
+            data.put("organizer", event.getOrganizerUsername());
+            data.put("title",event.getTitle());
+            data.put("desc",event.getDescription());
+            data.put("lat",event.getLatitude());
+            data.put("lon",event.getLongitude());
+            data.put("category",event.getCategory());
+            data.put("volNeeded",event.getVolunteersNeeded());
+            data.put("time",event.getTime());
+            data.put("image",bitmapToString(event.getImage()));
 
 
             //send data
-            conn.setConnectTimeout(1000);
+            conn.setConnectTimeout(CONNECTION_TIMEOUT);
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));

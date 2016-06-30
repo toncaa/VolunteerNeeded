@@ -408,7 +408,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                saveUsername(mUsername);
+                LocalMemoryManager.saveUsername(context, mUsername);
                 finish();
                 startMainAcivity();
             } else {
@@ -423,12 +423,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
 
-        public void saveUsername(String username){
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            editor.putString(getString(R.string.sp_username), username);
-        }
     }
 
 
