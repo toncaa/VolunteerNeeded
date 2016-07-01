@@ -111,6 +111,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 registerMe();
             }
         });
+
+
+        VolunteerEventsData.getInstance().loadVolunteerEvents();
     }
 
     private void registerMe() {
@@ -368,6 +371,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mUsername;
         private final String mPassword;
+        private String errorMessage;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -383,23 +387,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             String serverResponse = VolunteerHTTPHelper.loginUser(mUsername,mPassword);
-
+            boolean success;
             try {
                 String resMsg = (new JSONObject(serverResponse)).getString("msg");
                 if(!resMsg.equals("OK")) {
-                    Toast.makeText(context,resMsg,Toast.LENGTH_SHORT).show();
-                    return false;
+                    success = false;
+                    errorMessage = resMsg;
                 }else{
-                    return true;
+                    success =  true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                return false;
+                success = false;
             }
 
-            //return value is parameter for onPostEecute method
-            // TODO: register the new account here.
-          //  return true;
+            return success;
         }
 
         @Override
@@ -409,9 +411,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 LocalMemoryManager.saveUsername(context, mUsername);
-                finish();
                 startMainAcivity();
+                finish();
+
             } else {
+                Toast.makeText(context,errorMessage,Toast.LENGTH_SHORT).show();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

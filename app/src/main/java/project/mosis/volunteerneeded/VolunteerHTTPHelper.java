@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Base64;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -19,13 +20,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by MilanToncic on 6/5/2016.
  */
 public class VolunteerHTTPHelper {
 
-    public static final String SERVER_URL ="http://192.168.1.6:3000";
+    public static final String SERVER_URL ="http://192.168.0.108:3000";
     private static final int CONNECTION_TIMEOUT = 5000;
 
     public static String registerNewUser(String username, String password, String name, String phone, Bitmap img){
@@ -166,8 +168,66 @@ public class VolunteerHTTPHelper {
 
 
 
+    public static ArrayList<VolunteerEvent> getVolunteerEventsData(){
+        try {
+            String response;
+            HttpURLConnection conn = getConnection(SERVER_URL + "/getAllEvents");
+            JSONObject data = new JSONObject();
+
+            //send data
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            //receive response
+            ArrayList<VolunteerEvent> allEvents = new ArrayList<VolunteerEvent>();
+            int responseCode = conn.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                response = inputStreamToString(conn.getInputStream());
+                //parse response
+                JSONObject resObj = new JSONObject(response);
+                JSONArray eventsArray = resObj.getJSONArray("data");
+                for(int i=0; i<eventsArray.length(); i++){
+                    JSONObject eventObj = eventsArray.getJSONObject(i);
+                    VolunteerEvent e = new VolunteerEvent(
+                            eventObj.getString("organizer"),
+                            eventObj.getString("title"),
+                            eventObj.getString("lon"),
+                            eventObj.getString("lat"),
+                            eventObj.getString("desc"),
+                            eventObj.getString("time"),
+                            eventObj.getString("category"),
+                            eventObj.getInt("volunteerNeeded"),
+                            eventObj.getString("image"));
+                    allEvents.add(e);
+                }
 
 
+                return allEvents;
+            }
+        }catch (Exception error){
+            error.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+
+    private static HttpURLConnection getConnection(String urlAddress) throws IOException {
+        URL url = new URL(urlAddress);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setConnectTimeout(CONNECTION_TIMEOUT);
+        return conn;
+    }
 
 
     public static String inputStreamToString(InputStream is){
