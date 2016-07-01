@@ -1,5 +1,10 @@
 package project.mosis.volunteerneeded;
 
+import android.os.AsyncTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -9,7 +14,7 @@ public class VolunteerEventsData {
 
     public static VolunteerEventsData singleton;
 
-    ArrayList<VolunteerEvent> volunteerEvents;
+    private ArrayList<VolunteerEvent> volunteerEvents;
 
 
     private VolunteerEventsData(){
@@ -17,10 +22,10 @@ public class VolunteerEventsData {
         volunteerEvents.add(new VolunteerEvent());
     }
 
-    public static VolunteerEventsData getInstance()
-    {
+    public static VolunteerEventsData getInstance() {
         if(singleton == null)
             singleton = new VolunteerEventsData();
+
         return singleton;
     }
 
@@ -29,5 +34,40 @@ public class VolunteerEventsData {
         return volunteerEvents;
     }
 
+    public void setVolunteerEventsData(ArrayList<VolunteerEvent> events){
+        volunteerEvents = events;
+    }
+
+    public void loadVolunteerEvents()
+    {
+        //TODO: add logic to load from local starage
+        new LoadEvents().execute();
+    }
+
+    private static class LoadEvents extends AsyncTask<Void, Void, Boolean> {
+        private String errorMessage;
+
+        LoadEvents() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            ArrayList<VolunteerEvent> data = VolunteerHTTPHelper.getVolunteerEventsData();
+            if(data != null)
+                VolunteerEventsData.getInstance().setVolunteerEventsData(data);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+        }
+
+    }
 
 }

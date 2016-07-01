@@ -122,7 +122,7 @@ public class VolunteerEventActivity extends AppCompatActivity {
          int numOfVolunteers = numPicker.getValue();
 
          String organizer = LocalMemoryManager.getUsername(context);
-         VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,numOfVolunteers,eventPhoto);
+         VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,"10:30","a",numOfVolunteers,eventPhoto);
 
 
          // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();

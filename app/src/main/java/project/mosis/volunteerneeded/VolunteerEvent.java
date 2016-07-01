@@ -18,12 +18,14 @@ public class VolunteerEvent {
     private String category;
     private String time;
     private Bitmap image;
+    private String imageUrl;
 
 
     private String lat;
     private String lon;
 
-    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc, int volunteersNeeded, Bitmap image)
+    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc,
+                          String time, String category, int volunteersNeeded, Bitmap image)
     {
         this.organizerUsername = organizerUsername;
         this.title = title;
@@ -31,8 +33,25 @@ public class VolunteerEvent {
         this.lon = lon;
         this.lat = lat;
         this.volunteersNeeded = volunteersNeeded;
+        this.time = time;
+        this.category = category;
         this.image = image;
 
+        this.points = this.volunteersNeeded * 2;
+    }
+
+    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc,
+                          String time, String category, int volunteersNeeded, String imageUrl)
+    {
+        this.organizerUsername = organizerUsername;
+        this.title = title;
+        this.desc = desc;
+        this.lon = lon;
+        this.lat = lat;
+        this.volunteersNeeded = volunteersNeeded;
+        this.time = time;
+        this.category = category;
+        this.imageUrl = imageUrl;
         this.points = this.volunteersNeeded * 2;
     }
 
