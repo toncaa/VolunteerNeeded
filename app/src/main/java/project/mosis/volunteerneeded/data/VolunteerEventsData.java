@@ -44,6 +44,14 @@ public class VolunteerEventsData {
         new LoadEvents().execute();
     }
 
+
+    public void  updateVolunteerEvents()
+    {
+        ArrayList<VolunteerEvent> data = VolunteerHTTPHelper.getVolunteerEventsData();
+        if(data != null)
+            volunteerEvents = data;
+    }
+
     private static class LoadEvents extends AsyncTask<Void, Void, Boolean> {
         private String errorMessage;
 
@@ -67,6 +75,9 @@ public class VolunteerEventsData {
         @Override
         protected void onPostExecute(final Boolean success) {
         }
+
+
+
 
     }
 

@@ -31,18 +31,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import project.mosis.volunteerneeded.entities.Friend;
-import project.mosis.volunteerneeded.entities.Person;
 import project.mosis.volunteerneeded.entities.VolunteerEvent;
 import project.mosis.volunteerneeded.bluetoothscanner.ListActivity;
 import project.mosis.volunteerneeded.data.FriendsData;
 import project.mosis.volunteerneeded.data.VolunteerEventsData;
+import project.mosis.volunteerneeded.data.DataLoader;
+import project.mosis.volunteerneeded.data.LocalMemoryManager;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DataListener {
 
 
     private GoogleMap googleMap;
     private HashMap<Marker, Integer> markerEventIdMap;
     private HashMap<Marker, Integer> friendIdMap;
+
 
     public LocationManager locationManager;
     public LocationUpdateListener listener;
@@ -60,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
 
+        //observer
+        DataLoader dataLoader = new DataLoader(this, LocalMemoryManager.getUsername(this));
+        dataLoader.addDataListener(this);
+        dataLoader.execute();
 
     }
 
@@ -112,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     })
                     .show();
 
+
         }
         else if(id == R.id.search_item)
         {
@@ -130,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap = map;
         setUpMap();
 
-        addVolunteerEventMarkers();
-        addFriendPositionsOnMap();
+        //addVolunteerEventMarkers();
+        //addFriendPositionsOnMap();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new LocationUpdateListener();
@@ -149,13 +156,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 marker.showInfoWindow();
                 return true;
             }
         });
     }
 
+    //startuje aktiviti za dodavanje event-a
     private void makeVolunteerCall(LatLng latLng)
     {
         String lon = Double.toString(latLng.longitude);
@@ -173,37 +180,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-
-                    Context mContext = getApplicationContext();
-
-                    LinearLayout info = new LinearLayout(mContext);
-                    info.setOrientation(LinearLayout.VERTICAL);
-
-                    TextView title = new TextView(mContext);
-                    title.setTextColor(Color.BLACK);
-                    title.setGravity(Gravity.CENTER);
-                    title.setTypeface(null, Typeface.BOLD);
-                    title.setText(marker.getTitle());
-
-                    TextView snippet = new TextView(mContext);
-                    snippet.setTextColor(Color.GRAY);
-                    snippet.setText(marker.getSnippet());
-
-                    info.addView(title);
-                    info.addView(snippet);
-
-                    return info;
-                }
-            });
+//            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+//
+//                @Override
+//                public View getInfoWindow(Marker arg0) {
+//                    return null;
+//                }
+//
+//                @Override
+//                public View getInfoContents(Marker marker) {
+//
+//                    Context mContext = getApplicationContext();
+//
+//                    LinearLayout info = new LinearLayout(mContext);
+//                    info.setOrientation(LinearLayout.VERTICAL);
+//
+//                    TextView title = new TextView(mContext);
+//                    title.setTextColor(Color.BLACK);
+//                    title.setGravity(Gravity.CENTER);
+//                    title.setTypeface(null, Typeface.BOLD);
+//                    title.setText(marker.getTitle());
+//
+//                    TextView snippet = new TextView(mContext);
+//                    snippet.setTextColor(Color.GRAY);
+//                    snippet.setText(marker.getSnippet());
+//
+//                    info.addView(title);
+//                    info.addView(snippet);
+//
+//                    return info;
+//                }
+//            });
+            googleMap.setInfoWindowAdapter(new EventInfoWindowAdapter(this));
     }
 
 
@@ -212,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
         ArrayList<VolunteerEvent> places = VolunteerEventsData.getInstance().getVolunteerEvents();
         markerEventIdMap = new HashMap<Marker, Integer>((int)((double)places.size()*1.2));
+
+
 
         for (int i=0;i<places.size();i++)
         {
@@ -222,11 +232,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(loc);
+            //TODO: Postavi ikone na osnovu kategorije
+            //Bitmap icon = VolunteerHTTPHelper.getBitmapFromURL("http://192.168.0.100:3000/users_images/nik.jpeg");
+            //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.volunteer_event));
             markerOptions.title(event.getName());
             markerOptions.snippet(event.getDescription());
+            //Marker marker = googleMap.addMarker(markerOptions);
+            //markerEventIdMap.put(marker,i);
+
             Marker marker = googleMap.addMarker(markerOptions);
             markerEventIdMap.put(marker,i);
+
+
+            return;
         }
     }
 
@@ -252,6 +271,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerEventIdMap.put(marker,i);
         }
     }
+
+
+
+    @Override
+    public void onDataReady() {
+        addVolunteerEventMarkers();
+        addFriendPositionsOnMap();
+    }
+
 
     class LocationUpdateListener implements LocationListener {
 
@@ -281,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
-
 }
 
 

@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import project.mosis.volunteerneeded.data.LocalMemoryManager;
 import project.mosis.volunteerneeded.data.VolunteerEventsData;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -113,8 +114,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-
-        VolunteerEventsData.getInstance().loadVolunteerEvents();
     }
 
     private void registerMe() {

@@ -1,5 +1,5 @@
-package project.mosis.volunteerneeded.entities;
 
+package project.mosis.volunteerneeded.entities;
 import android.graphics.Bitmap;
 
 import org.json.JSONException;
@@ -114,4 +114,12 @@ public class VolunteerEvent {
     public String getCategory() {return category;  }
 
     public String getTime() { return time;   }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
 }

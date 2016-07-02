@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import project.mosis.volunteerneeded.entities.Friend;
 import project.mosis.volunteerneeded.entities.RankedVolunteer;
 import project.mosis.volunteerneeded.entities.VolunteerEvent;
 
@@ -165,7 +166,43 @@ public class VolunteerHTTPHelper {
         return retStr;
     }
 
+    public static ArrayList<String> getFriendsList(String username){
+        ArrayList<String> friends = new ArrayList<>();
+        try {
+            String response;
+            HttpURLConnection conn = getConnection(SERVER_URL + "/getAllFriendsName");
+            JSONObject data = new JSONObject();
+            data.put("username",username);
 
+            //send data
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            //receive response
+            ArrayList<VolunteerEvent> allEvents = new ArrayList<VolunteerEvent>();
+            int responseCode = conn.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                response = inputStreamToString(conn.getInputStream());
+                //parse response
+                JSONObject resObj = new JSONObject(response);
+                JSONArray friendsArray = resObj.getJSONArray("data");
+                for(int i=0; i<friendsArray.length(); i++){
+                    String friendUsername = friendsArray.getString(i);
+                    friends.add(friendUsername);
+                }
+                return friends;
+            }
+        }catch (Exception error){
+            error.printStackTrace();
+        }
+
+        return friends;
+    }
 
     public static ArrayList<VolunteerEvent> getVolunteerEventsData(){
         try {
@@ -258,6 +295,70 @@ public class VolunteerHTTPHelper {
 
 
                 return rankedVolunteers;
+            }
+        }catch (Exception error){
+            error.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+
+    public static ArrayList<Friend> getAllFriends(String username){
+        try {
+            String response;
+            HttpURLConnection conn = getConnection(SERVER_URL + "/getAllFriends");
+            JSONObject data = new JSONObject();
+            data.put("username",username);
+
+            //send data
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            //receive response
+            ArrayList<Friend> allFriends = new ArrayList<Friend>();
+            int responseCode = conn.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                response = inputStreamToString(conn.getInputStream());
+                //parse response
+                JSONObject resObj = new JSONObject(response);
+                JSONArray eventsArray = resObj.getJSONArray("data");
+                for(int i=0; i<eventsArray.length(); i++){
+                    JSONObject eventObj = eventsArray.getJSONObject(i);
+
+                    //parse friends list
+                    ArrayList<String> friends = new ArrayList<>();
+                    JSONArray friendsArray = eventObj.getJSONArray("friends");
+                    for(int j=0; j<friendsArray.length(); j++){
+                        String friendUsername = friendsArray.getString(j);
+                        friends.add(friendUsername);
+                    }
+
+                    String name = eventObj.getString("name");
+                    String usn = eventObj.getString("username");
+                    String rang = eventObj.getString("rank");
+
+                    Friend p = new Friend(
+                            name,
+                            usn,
+                            eventObj.getString("phone_num"),
+                            eventObj.getInt("points"),
+                            rang,
+                            eventObj.getString("lat"),
+                            eventObj.getString("lon"),
+                            friends);
+
+                    allFriends.add(p);
+                }
+
+
+                return allFriends;
             }
         }catch (Exception error){
             error.printStackTrace();

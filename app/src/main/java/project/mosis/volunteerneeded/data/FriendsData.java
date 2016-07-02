@@ -3,7 +3,7 @@ package project.mosis.volunteerneeded.data;
 import java.util.ArrayList;
 
 import project.mosis.volunteerneeded.entities.Friend;
-import project.mosis.volunteerneeded.entities.Person;
+import project.mosis.volunteerneeded.VolunteerHTTPHelper;
 
 /**
  * Created by MilanToncic on 6/10/2016.
@@ -15,9 +15,12 @@ public class FriendsData {
     ArrayList<Friend> friends;
 
 
+
     private FriendsData(){
         friends = new ArrayList<Friend>();
-        friends.add(new Friend("Nikola Tesla", "files/user_images/tesla.png","Helpful scientist",3600));
+        friends.add(new Friend());
+            /*
+             friends.add(new Friend("Nikola Tesla", "files/user_images/tesla.png","Helpful scientist",3600));
         friends.add(new Friend("Jova Jović", "files/user_images/volunteer.jpg","Divine Helper",3556));
         friends.add(new Friend("Nikola Nikolić", "files/user_images/volunteer.jpg","Divine Helper",3200));
         friends.add(new Friend("Branko Ćopić", "files/user_images/volunteer.jpg","Divine Helper",2456));
@@ -25,6 +28,8 @@ public class FriendsData {
         friends.add(new Friend("Matija Bećković", "files/user_images/volunteer.jpg","Divine Helper",5353));
         friends.add(new Friend("Laza Kostić", "files/user_images/volunteer.jpg","Divine Helper",2124));
         friends.add(new Friend("Velimir Abramović", "files/user_images/volunteer.jpg","Divine Helper",4211));
+
+             */
     }
 
     public static FriendsData getInstance()
@@ -37,6 +42,17 @@ public class FriendsData {
     public ArrayList<Friend> getPeople()
     {
         return friends;
+    }
+
+    /**
+     * Get from database.
+     */
+    public void  updateFriendsData(String username)
+    {
+        ArrayList<Friend> data = VolunteerHTTPHelper.getAllFriends(username);
+
+        if(data != null)
+            friends = data;
     }
 
 }

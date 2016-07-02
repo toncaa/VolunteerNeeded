@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import project.mosis.volunteerneeded.adapters.FriendsListAdapter;
 import project.mosis.volunteerneeded.data.FriendsData;
 import project.mosis.volunteerneeded.entities.Friend;
-import project.mosis.volunteerneeded.entities.Person;
 
 
 public class FriendsActivity extends AppCompatActivity {

@@ -11,8 +11,6 @@ import java.util.List;
 
 import project.mosis.volunteerneeded.R;
 import project.mosis.volunteerneeded.entities.Friend;
-import project.mosis.volunteerneeded.entities.Person;
-import project.mosis.volunteerneeded.entities.RankedVolunteer;
 
 /**
  * Created by MilanToncic on 7/2/2016.
@@ -48,11 +46,11 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> {
             }
 
             if (tt2 != null) {
-                tt2.setText(String.valueOf(p.getVolunteeringPoints()) + " points");
+                tt2.setText(String.valueOf(p.getPoints()) + " points");
             }
 
             if (tt3 != null) {
-                tt3.setText("Rank: " + p.getRank());
+                tt3.setText("Rank: " + p.getRang());
             }
 
         }
