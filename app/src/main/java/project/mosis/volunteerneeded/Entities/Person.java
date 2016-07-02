@@ -15,6 +15,7 @@ public class Person {
     private String name;
     private String password;
     private Bitmap image;
+    private String imageUrl;
     private VolunteerRank rank;
     private int volunteeringPoints;
     private ArrayList<Person> friends;
@@ -30,6 +31,7 @@ public class Person {
         this.friends = new ArrayList<>();
         loc = new LatLng(21.9126,43.3189);
     }
+
 
     public Person(){
         this.name= "Default Name";

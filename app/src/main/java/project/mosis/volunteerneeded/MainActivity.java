@@ -30,10 +30,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import project.mosis.volunteerneeded.entities.Friend;
 import project.mosis.volunteerneeded.entities.Person;
 import project.mosis.volunteerneeded.entities.VolunteerEvent;
 import project.mosis.volunteerneeded.bluetoothscanner.ListActivity;
-import project.mosis.volunteerneeded.data.PeopleData;
+import project.mosis.volunteerneeded.data.FriendsData;
 import project.mosis.volunteerneeded.data.VolunteerEventsData;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -231,12 +232,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void addFriendPositionsOnMap()
     {
-        ArrayList<Person> people = PeopleData.getInstance().getPeople();
+        ArrayList<Friend> people = FriendsData.getInstance().getPeople();
         friendIdMap = new HashMap<Marker, Integer>((int)((double)people.size()*1.2));
 
         for (int i=0;i<people.size();i++)
         {
-            Person person = people.get(i);
+            Friend person = people.get(i);
             LatLng latLng = person.getLatLng();
 
             MarkerOptions markerOptions = new MarkerOptions();

@@ -44,8 +44,8 @@ public class MenuActivity extends FragmentActivity implements MenuFragment.OnFra
         friendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MenuActivity.this, FriendsActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MenuActivity.this, FriendsActivity.class);
+                startActivity(intent);
             }
         });
 
