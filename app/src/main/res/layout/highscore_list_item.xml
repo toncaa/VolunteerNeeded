@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="Milan Tončić"
             android:gravity="center"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textAlignment="gravity"
             android:textColor="#fff"
             />

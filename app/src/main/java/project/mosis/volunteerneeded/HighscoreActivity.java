@@ -24,7 +24,7 @@ public class HighscoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_highscore);
 
         RankedVolunteerData rankedVolunteerData = RankedVolunteerData.getInstance();
-        volunteers = rankedVolunteerData.getVolunteers();
+        volunteers = rankedVolunteerData.sortVolunteers();
 
         highscoreListAdapter = new HighscoreListAdapter(this, R.layout.activity_highscore,volunteers);
 
