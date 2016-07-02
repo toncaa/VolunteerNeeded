@@ -58,4 +58,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <string name="v_highscore">Highscore</string>
+
 </resources>

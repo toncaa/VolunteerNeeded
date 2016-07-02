@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,9 +23,10 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import project.mosis.volunteerneeded.entities.VolunteerEvent;
 
 public class VolunteerEventActivity extends AppCompatActivity {
 
@@ -54,6 +54,11 @@ public class VolunteerEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_event);
+
+
+        Intent intent = getIntent();
+        lon = intent.getStringExtra("lon");
+        lat = intent.getStringExtra("lat");
 
         userImageView = (ImageView)findViewById(R.id.image_btn);
         userImageView.setOnClickListener(new View.OnClickListener() {
@@ -105,9 +110,6 @@ public class VolunteerEventActivity extends AppCompatActivity {
         titleView = (EditText) findViewById(R.id.title);
         descView = (EditText) findViewById(R.id.desc);
 
-        Intent intent = getIntent();
-        lon = intent.getStringExtra("lon");
-        lat = intent.getStringExtra("lat");
 
         guiThread = new Handler();
         context = this;

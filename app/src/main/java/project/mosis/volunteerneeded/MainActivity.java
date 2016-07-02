@@ -1,30 +1,24 @@
 package project.mosis.volunteerneeded;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.location.Criteria;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -36,7 +30,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import project.mosis.volunteerneeded.entities.Person;
+import project.mosis.volunteerneeded.entities.VolunteerEvent;
 import project.mosis.volunteerneeded.bluetoothscanner.ListActivity;
+import project.mosis.volunteerneeded.data.PeopleData;
+import project.mosis.volunteerneeded.data.VolunteerEventsData;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -48,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public LocationManager locationManager;
     public LocationUpdateListener listener;
 
+    private static final int ON_SEARCH_REQUEST = 444;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
+
 
     }
 
@@ -110,9 +111,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     })
                     .show();
 
-
-
-
+        }
+        else if(id == R.id.search_item)
+        {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivityForResult(intent,ON_SEARCH_REQUEST );
         }
 
         return super.onOptionsItemSelected(item);
@@ -139,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onMapLongClick(LatLng latLng) {
                 makeVolunteerCall(latLng);
-
             }
         });
 
@@ -169,6 +171,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             googleMap.setMyLocationEnabled(true);
 
             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+
+                    Context mContext = getApplicationContext();
+
+                    LinearLayout info = new LinearLayout(mContext);
+                    info.setOrientation(LinearLayout.VERTICAL);
+
+                    TextView title = new TextView(mContext);
+                    title.setTextColor(Color.BLACK);
+                    title.setGravity(Gravity.CENTER);
+                    title.setTypeface(null, Typeface.BOLD);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = new TextView(mContext);
+                    snippet.setTextColor(Color.GRAY);
+                    snippet.setText(marker.getSnippet());
+
+                    info.addView(title);
+                    info.addView(snippet);
+
+                    return info;
+                }
+            });
     }
 
 
@@ -217,9 +251,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerEventIdMap.put(marker,i);
         }
     }
-
-
-
 
     class LocationUpdateListener implements LocationListener {
 

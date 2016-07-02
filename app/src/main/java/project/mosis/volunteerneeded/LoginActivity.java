@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -38,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import project.mosis.volunteerneeded.data.VolunteerEventsData;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -122,8 +123,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void startMainAcivity(){
-        Intent i = new Intent(this,MainActivity.class);
-        startActivity(i);
+        Intent i = new Intent(this,MenuActivity.class);
+        startActivityForResult(i,0);
     }
 
     private void populateAutoComplete() {
@@ -426,6 +427,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+
+
 
     }
 

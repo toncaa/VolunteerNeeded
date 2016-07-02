@@ -1,8 +1,8 @@
-package project.mosis.volunteerneeded;
-
-import com.google.android.gms.plus.People;
+package project.mosis.volunteerneeded.data;
 
 import java.util.ArrayList;
+
+import project.mosis.volunteerneeded.entities.Person;
 
 /**
  * Created by MilanToncic on 6/10/2016.

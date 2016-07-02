@@ -1,33 +1,32 @@
 package project.mosis.volunteerneeded;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.util.Base64;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import project.mosis.volunteerneeded.entities.RankedVolunteer;
+import project.mosis.volunteerneeded.entities.VolunteerEvent;
 
 /**
  * Created by MilanToncic on 6/5/2016.
  */
 public class VolunteerHTTPHelper {
 
-    public static final String SERVER_URL ="http://192.168.0.108:3000";
+    public static final String SERVER_URL ="http://192.168.0.103:3000";
     private static final int CONNECTION_TIMEOUT = 5000;
 
     public static String registerNewUser(String username, String password, String name, String phone, Bitmap img){
@@ -208,6 +207,57 @@ public class VolunteerHTTPHelper {
 
 
                 return allEvents;
+            }
+        }catch (Exception error){
+            error.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    /*
+        getHighestRankedVolunteers
+        => returning volunteers sorted by points
+     */
+
+    public static ArrayList<RankedVolunteer> getHighestRankedVolunteers()
+    {
+        try {
+            String response;
+            HttpURLConnection conn = getConnection(SERVER_URL + "/getHighestRankedVolunteers");
+            JSONObject data = new JSONObject();
+
+            //send data
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            //receive response
+            ArrayList<RankedVolunteer> rankedVolunteers = new ArrayList<RankedVolunteer>();
+            int responseCode = conn.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                response = inputStreamToString(conn.getInputStream());
+                //parse response
+                JSONObject resObj = new JSONObject(response);
+                JSONArray eventsArray = resObj.getJSONArray("data");
+                for(int i=0; i<eventsArray.length(); i++){
+                    JSONObject eventObj = eventsArray.getJSONObject(i);
+                    RankedVolunteer rankedVolunteer = new RankedVolunteer(
+                            eventObj.getString("name"),
+                            eventObj.getString("imageUrl"),
+                            eventObj.getString("rank"),
+                            eventObj.getInt("points")
+                            );
+                    rankedVolunteers.add(rankedVolunteer);
+                }
+
+
+                return rankedVolunteers;
             }
         }catch (Exception error){
             error.printStackTrace();

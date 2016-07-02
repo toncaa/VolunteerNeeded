@@ -1,7 +1,6 @@
-package project.mosis.volunteerneeded;
+package project.mosis.volunteerneeded.entities;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -10,8 +9,6 @@ import java.util.ArrayList;
 /**
  * Created by MilanToncic on 6/5/2016.
  */
-
-enum VolunteerRank {rank1, rank2, rank3}
 
 public class Person {
 
@@ -56,3 +53,6 @@ public class Person {
         return desc;
     }
 }
+
+
+

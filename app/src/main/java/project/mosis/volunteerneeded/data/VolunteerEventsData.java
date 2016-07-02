@@ -1,11 +1,11 @@
-package project.mosis.volunteerneeded;
+package project.mosis.volunteerneeded.data;
 
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import project.mosis.volunteerneeded.entities.VolunteerEvent;
+import project.mosis.volunteerneeded.VolunteerHTTPHelper;
 
 /**
  * Created by MilanToncic on 6/5/2016.

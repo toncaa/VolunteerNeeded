@@ -1,9 +1,11 @@
-package project.mosis.volunteerneeded;
+package project.mosis.volunteerneeded.entities;
 
 import android.graphics.Bitmap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import project.mosis.volunteerneeded.VolunteerHTTPHelper;
 
 /**
  * Created by MilanToncic on 6/5/2016.
@@ -40,7 +42,7 @@ public class VolunteerEvent {
         this.points = this.volunteersNeeded * 2;
     }
 
-    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc,
+    public VolunteerEvent(String organizerUsername, String title, String lat, String lon, String desc,
                           String time, String category, int volunteersNeeded, String imageUrl)
     {
         this.organizerUsername = organizerUsername;
@@ -104,7 +106,7 @@ public class VolunteerEvent {
         json.put("category",category);
         json.put("volNeeded",volunteersNeeded);
         json.put("time",time);
-        json.put("image",VolunteerHTTPHelper.bitmapToString(image));
+        json.put("image", VolunteerHTTPHelper.bitmapToString(image));
         return json.toString();
     }
 
