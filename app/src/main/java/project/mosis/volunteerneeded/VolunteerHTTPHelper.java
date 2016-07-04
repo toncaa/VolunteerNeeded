@@ -27,7 +27,7 @@ import project.mosis.volunteerneeded.entities.VolunteerEvent;
  */
 public class VolunteerHTTPHelper {
 
-    public static final String SERVER_URL ="http://192.168.0.103:3000";
+    public static final String SERVER_URL ="http://192.168.0.100:3000";
     private static final int CONNECTION_TIMEOUT = 5000;
 
     public static String registerNewUser(String username, String password, String name, String phone, Bitmap img){
@@ -241,7 +241,6 @@ public class VolunteerHTTPHelper {
                             eventObj.getString("image"));
                     allEvents.add(e);
                 }
-
 
                 return allEvents;
             }

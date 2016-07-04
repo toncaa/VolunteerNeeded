@@ -13,17 +13,14 @@ import java.io.OutputStream;
  */
 public class ManageConnectThread extends Thread {
 
-    public ManageConnectThread() {
-    }
-
-    public void sendData(BluetoothSocket socket, int data) throws IOException {
+    public static void sendData(BluetoothSocket socket, int data) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream(4);
         output.write(data);
         OutputStream outputStream = socket.getOutputStream();
         outputStream.write(output.toByteArray());
     }
 
-    public int receiveData(BluetoothSocket socket) throws IOException {
+    public static  int receiveData(BluetoothSocket socket) throws IOException {
         byte[] buffer = new byte[4];
         ByteArrayInputStream input = new ByteArrayInputStream(buffer);
         InputStream inputStream = socket.getInputStream();

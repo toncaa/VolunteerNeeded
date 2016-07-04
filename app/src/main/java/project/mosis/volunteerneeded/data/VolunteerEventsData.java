@@ -44,12 +44,28 @@ public class VolunteerEventsData {
         new LoadEvents().execute();
     }
 
+    public VolunteerEvent getEventByName(String name){
+      /*  for(int i=0; i< volunteerEvents.size(); i++)
+            if(volunteerEvents.get(i).getDescription().equals(name))
+                return volunteerEvents.get(i);*/
+        return volunteerEvents.get(0);
+      //  return null;
+    }
 
     public void  updateVolunteerEvents()
     {
         ArrayList<VolunteerEvent> data = VolunteerHTTPHelper.getVolunteerEventsData();
         if(data != null)
             volunteerEvents = data;
+    }
+
+    public ArrayList<VolunteerEvent> findEvents(int maxDistance, String title, int numOfVolunteer){
+        ArrayList<VolunteerEvent> result = new ArrayList<>();
+        for(int i=0; i < volunteerEvents.size(); i++){
+            if(volunteerEvents.get(i).meetCriteria(maxDistance,title,numOfVolunteer))
+                result.add(volunteerEvents.get(i));
+        }
+        return  result;
     }
 
     private static class LoadEvents extends AsyncTask<Void, Void, Boolean> {
@@ -75,10 +91,6 @@ public class VolunteerEventsData {
         @Override
         protected void onPostExecute(final Boolean success) {
         }
-
-
-
-
     }
 
 }

@@ -1,5 +1,6 @@
 package project.mosis.volunteerneeded.bluetoothscanner;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,8 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.ServiceConfigurationError;
+import java.util.UUID;
+
 import project.mosis.volunteerneeded.MainActivity;
 import project.mosis.volunteerneeded.R;
+import project.mosis.volunteerneeded.bluetoothscanner.Connecting.ConnectThread;
+import project.mosis.volunteerneeded.bluetoothscanner.Connecting.ManageConnectThread;
+import project.mosis.volunteerneeded.bluetoothscanner.Connecting.ServerConnectThread;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +35,11 @@ public class ListenerFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final UUID service_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
+    private ServerConnectThread server;
+    private BluetoothAdapter BTAdapter;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -63,7 +76,23 @@ public class ListenerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        BTAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        server = new ServerConnectThread();
+
+
+        try {
+            startListening();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void startListening() throws IOException {
+        server.acceptConnect(BTAdapter, service_UUID);
+        ManageConnectThread.sendData(server.getSocket(),1 );
     }
 
     @Override
