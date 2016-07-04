@@ -52,6 +52,11 @@ public class ListActivity extends ActionBarActivity implements DeviceListFragmen
         //TODO Check if bluetooth is enabled
 
         BTAdapter = BluetoothAdapter.getDefaultAdapter();
+
+
+        BTAdapter.getRemoteDevice( BTAdapter.getAddress());
+
+
         // Phone does not support Bluetooth so let the user know and exit.
         if (BTAdapter == null) {
             new AlertDialog.Builder(this)
