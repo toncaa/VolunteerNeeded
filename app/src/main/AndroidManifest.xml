@@ -33,8 +33,10 @@
             android:icon="@drawable/hand_heart_logo"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,12 +55,17 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" />
-        <activity android:name=".SearchActivity" />
+        <activity android:name=".search_events.SearchActivity" />
         <activity android:name=".bluetoothscanner.ListActivity" />
         <activity android:name=".HighscoreActivity" />
-        <activity android:name=".MenuActivity">
+        <activity android:name=".MenuActivity" >
+
+
         </activity>
-        <activity android:name=".FriendsActivity"></activity>
+
+        <activity android:name=".FriendsActivity" />
+        <activity android:name=".search_events.VolunteerEventDetailActivity" />
+        <activity android:name=".search_events.SearchListActivity"></activity>
     </application>
 
 </manifest>

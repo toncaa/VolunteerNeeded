@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".search_events.VolunteerEventDetailActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/v_event"
+        android:layout_margin="5dp"
+        />
+
+    <TextView
+        android:id="@+id/organizer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Organizer: Jova Jović"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:textColor="#124"
+        />
+
+    <TextView
+        android:id="@+id/vevent_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title: Cleaning office"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:textColor="#124"
+        />
+
+    <TextView
+        android:id="@+id/vneeded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volunteers more: 5"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:textColor="#124"
+        />
+
+
+    <TextView
+        android:id="@+id/vevent_prize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prize: 50 points"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:textColor="#124"
+        />
+
+    <TextView
+        android:id="@+id/vevent_detail_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DETAILS"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:textColor="#124"
+        />
+
+    <TextView
+        android:id="@+id/vevent_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Okupljanje mladih radi čisćenja prostorija zgrade staračkog doma i druženju sa stanarima doma. "
+        android:gravity="center"
+        android:textSize="25dp"
+        android:layout_margin="5dp"
+        android:textAlignment="gravity"
+        android:textColor="#fff"
+        android:background="@drawable/corners"
+        />
+
+    <Button
+        android:id="@+id/gotoloc_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_gravity="center"
+        android:text="GO TO LOCATION"
+        android:textSize="20dp"
+        android:textColor="#fff"
+        android:background="@drawable/corners"
+        />
+
+
+
+
+</LinearLayout>

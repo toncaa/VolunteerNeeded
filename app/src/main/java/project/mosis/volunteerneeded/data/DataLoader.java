@@ -39,8 +39,8 @@ public class DataLoader extends AsyncTask<Void, Void, Void> {
     private String errorMessage;
     private String username;
     private ArrayList<Bitmap> friends;
-    private static final String VOLUNTEER_IMAGES_LOCATION = "http://192.168.0.100:3000/users_images/";
-    private static final String EVENTS_IMAGES_LOCATION = "http://192.168.0.100:3000/events_images/";
+    private static final String VOLUNTEER_IMAGES_LOCATION = "http://192.168.137.1:3000/users_images/";
+    private static final String EVENTS_IMAGES_LOCATION = "http://192.168.137.1:3000/events_images/";
     private static final String IMAGES_EXTENSION = ".jpeg";
 
     public DataLoader(Context context, String username) {

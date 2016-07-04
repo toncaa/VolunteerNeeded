@@ -41,7 +41,7 @@ public class VolunteerEventActivity extends AppCompatActivity {
     private EditText titleView, descView;
     private NumberPicker numPicker;
     private Button postNewEvent;
-    private String lon, lat;
+    private Double lon, lat;
     private Bitmap eventPhoto;
 
     //////////////
@@ -57,9 +57,11 @@ public class VolunteerEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_volunteer_event);
 
 
-        Intent intent = getIntent();
-        lon = intent.getStringExtra("lon");
-        lat = intent.getStringExtra("lat");
+        Bundle bundle = getIntent().getExtras();
+
+            lon = bundle.getDouble("lon");
+            lat = bundle.getDouble("lat");
+
 
         userImageView = (ImageView)findViewById(R.id.image_btn);
         userImageView.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +127,7 @@ public class VolunteerEventActivity extends AppCompatActivity {
          int numOfVolunteers = numPicker.getValue();
 
          String organizer = LocalMemoryManager.getUsername(context);
-         VolunteerEvent vEvent = new VolunteerEvent(organizer,title,lon,lat,desc,"10:30","a",numOfVolunteers,eventPhoto);
+         VolunteerEvent vEvent = new VolunteerEvent(organizer,title,String.valueOf(lon),String.valueOf(lat),desc,"10:30","a",numOfVolunteers,eventPhoto);
 
 
          // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();

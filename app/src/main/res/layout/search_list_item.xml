@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding="2dp"
+    android:background="#124"
+    >
+
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/vevent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cleaning office"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textAlignment="gravity"
+            android:textColor="#fff"
+            />
+
+
+        <TextView
+            android:id="@+id/volunteer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Organizer: Jova Jović"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textAlignment="gravity"
+            android:textColor="#fff"
+            />
+
+        <TextView
+            android:id="@+id/volunteer_points"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PRIZE: 50 points"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textAlignment="gravity"
+            android:textColor="#fff"
+            />
+
+        <TextView
+            android:id="@+id/volunteer_rank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volunteers more: 5"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textAlignment="gravity"
+            android:textColor="#fff"
+            />
+
+        <TextView
+            android:id="@+id/ve_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="click to see more about ..."
+            android:gravity="center"
+            android:textSize="10dp"
+            android:textAlignment="gravity"
+            android:textColor="#fff"
+            />
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -3,8 +3,6 @@ package project.mosis.volunteerneeded;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,12 +10,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,6 +31,7 @@ import project.mosis.volunteerneeded.data.FriendsData;
 import project.mosis.volunteerneeded.data.VolunteerEventsData;
 import project.mosis.volunteerneeded.data.DataLoader;
 import project.mosis.volunteerneeded.data.LocalMemoryManager;
+import project.mosis.volunteerneeded.search_events.SearchActivity;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DataListener {
 
@@ -244,8 +239,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = googleMap.addMarker(markerOptions);
             markerEventIdMap.put(marker,i);
 
-
-            return;
         }
     }
 
