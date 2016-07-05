@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             searchEventLoc = new LatLng(latitude,longitude);
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(searchEventLoc, 14);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(searchEventLoc, 17);
             googleMap.animateCamera(cameraUpdate);
         }
 

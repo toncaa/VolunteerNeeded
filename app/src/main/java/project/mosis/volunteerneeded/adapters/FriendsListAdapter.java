@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,6 +42,8 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> {
             TextView tt2 = (TextView) v.findViewById(R.id.volunteer_points);
             TextView tt3 = (TextView) v.findViewById(R.id.volunteer_rank);
 
+            ImageView iview = (ImageView) v.findViewById(R.id.volunteer_image);
+
             if (tt1 != null) {
                 tt1.setText(p.getName());
             }
@@ -51,6 +54,11 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> {
 
             if (tt3 != null) {
                 tt3.setText("Rank: " + p.getRang());
+            }
+
+            if(iview != null)
+            {
+                iview.setImageBitmap(p.getImage());
             }
 
         }
