@@ -157,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 serviceItem.setTitle("Start Service");
 
         }
+        else if(id == R.id.friends_item)
+        {
+            Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+            startActivity( intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }

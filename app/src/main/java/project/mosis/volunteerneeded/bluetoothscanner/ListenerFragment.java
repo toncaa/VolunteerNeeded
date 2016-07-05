@@ -91,8 +91,15 @@ public class ListenerFragment extends Fragment {
 
 
     public void startListening() throws IOException {
-        server.acceptConnect(BTAdapter, service_UUID);
-        ManageConnectThread.sendData(server.getSocket(),1 );
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                server.acceptConnect(BTAdapter,service_UUID);
+            }
+        });
+
+
     }
 
     @Override
@@ -106,8 +113,9 @@ public class ListenerFragment extends Fragment {
         stop_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                startActivity(intent);
+                getActivity().finish();
             }
         });
 

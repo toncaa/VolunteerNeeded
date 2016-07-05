@@ -4,9 +4,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.UUID;
+
+import project.mosis.volunteerneeded.bluetoothscanner.ListActivity;
+import project.mosis.volunteerneeded.bluetoothscanner.ListenerFragment;
 
 /**
  * Created by MilanToncic on 6/29/2016.
@@ -19,7 +23,7 @@ public class ServerConnectThread extends Thread{
     public void acceptConnect(BluetoothAdapter bTAdapter, UUID mUUID) {
         BluetoothServerSocket temp = null;
         try {
-            temp = bTAdapter.listenUsingRfcommWithServiceRecord("Service_Name", mUUID);
+            temp = bTAdapter.listenUsingRfcommWithServiceRecord("FriendService", mUUID);
         } catch(IOException e) {
             Log.d("SERVERCONNECT", "Could not get a BluetoothServerSocket:" + e.toString());
         }

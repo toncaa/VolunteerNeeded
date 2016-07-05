@@ -3,6 +3,7 @@ package project.mosis.volunteerneeded.bluetoothscanner;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -178,24 +182,62 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
 
         Log.d("DEVICELIST", "onItemClick position: " + position +
                 " id: " + id + " name: " + deviceItemList.get(position).getDeviceName() + "\n");
-        BluetoothDevice addr = bTAdapter.getRemoteDevice(deviceItemList.get(position).getAddress());
-        client.connect(addr,service_UUID);
-        try {
-            int data = ManageConnectThread.receiveData(client.getSocket());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        String mac_address = deviceItemList.get(position).getAddress();
+        client.connect(bTAdapter.getRemoteDevice(mac_address),service_UUID);
 
 
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            try {
-                mListener.onFragmentInteraction(deviceItemList.get(position));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
+//        BluetoothDevice btDevice = bTAdapter.getRemoteDevice(deviceItemList.get(position).getAddress());
+//
+//        Method m = null;
+//        try {
+//            m = btDevice.getClass().getMethod(
+//                    "createRfcommSocket", new Class[] { int.class });
+//
+//            BluetoothSocket socket;
+//            socket = (BluetoothSocket) m.invoke(btDevice, 3);
+//
+//
+//            // debug check to ensure socket was set.
+//            assert (socket != null) : "Socket is Null";
+//
+//            // attempt to connect to device
+//            socket.connect();
+//
+//            Log.d(this.toString(),
+//                    "************ CONNECTION SUCCEES! *************");
+//
+//            // Grab the outputStream. This stream will send bytes to the
+//            // external/second device. i.e it will sent it out.
+//            // Note: this is a Java.io.OutputStream which is used in several
+//            // types of Java programs such as file io, so you may be
+//            // familiar with it.
+//            OutputStream outputStream = socket.getOutputStream();
+//
+//            // Create the String to send to the second device.
+//            // Most devices require a '\r' or '\n' or both at the end of the
+//            // string.
+//            // @todo set your message
+//            String message = "Data from Android and tester program!\r";
+//
+//            // Convert the message to bytes and blast it through the
+//            // bluetooth
+//            // to the second device. You may want to use:
+//            // public byte[] getBytes (Charset charset) for proper String to
+//            // byte conversion.
+//            outputStream.write(message.getBytes());
+//
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 
     }
 
