@@ -3,6 +3,7 @@ package project.mosis.volunteerneeded;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,7 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -32,19 +36,24 @@ import project.mosis.volunteerneeded.data.VolunteerEventsData;
 import project.mosis.volunteerneeded.data.DataLoader;
 import project.mosis.volunteerneeded.data.LocalMemoryManager;
 import project.mosis.volunteerneeded.search_events.SearchActivity;
+import project.mosis.volunteerneeded.service.VolunteerService;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DataListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, DataListener, MarkersContainer {
 
 
     private GoogleMap googleMap;
-    private HashMap<Marker, Integer> markerEventIdMap;
-    private HashMap<Marker, Integer> friendIdMap;
-
+    private HashMap<Marker, VolunteerEvent> markerEventMap;
+    private HashMap<Marker, Friend> markerFriendMap;
+    private ArrayList<Friend> friends;
+    private ArrayList<VolunteerEvent> events;
+    private static Location mCurrentLocation;
 
     public LocationManager locationManager;
     public LocationUpdateListener listener;
 
-    private static final int ON_SEARCH_REQUEST = 444;
+    private LatLng searchEventLoc;
+
+    private static final int EVENT_LOCATION = 555;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if(id == R.id.search_item)
         {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-            startActivityForResult(intent,ON_SEARCH_REQUEST );
+            startActivityForResult(intent,EVENT_LOCATION );
         }
 
         return super.onOptionsItemSelected(item);
@@ -155,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
+
+
+
     }
 
     //startuje aktiviti za dodavanje event-a
@@ -175,111 +187,119 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-//            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-//
-//                @Override
-//                public View getInfoWindow(Marker arg0) {
-//                    return null;
-//                }
-//
-//                @Override
-//                public View getInfoContents(Marker marker) {
-//
-//                    Context mContext = getApplicationContext();
-//
-//                    LinearLayout info = new LinearLayout(mContext);
-//                    info.setOrientation(LinearLayout.VERTICAL);
-//
-//                    TextView title = new TextView(mContext);
-//                    title.setTextColor(Color.BLACK);
-//                    title.setGravity(Gravity.CENTER);
-//                    title.setTypeface(null, Typeface.BOLD);
-//                    title.setText(marker.getTitle());
-//
-//                    TextView snippet = new TextView(mContext);
-//                    snippet.setTextColor(Color.GRAY);
-//                    snippet.setText(marker.getSnippet());
-//
-//                    info.addView(title);
-//                    info.addView(snippet);
-//
-//                    return info;
-//                }
-//            });
-            googleMap.setInfoWindowAdapter(new EventInfoWindowAdapter(this));
+            googleMap.setInfoWindowAdapter(new EventInfoWindowAdapter(this, this));
     }
 
 
 
     private void addVolunteerEventMarkers()
     {
-        ArrayList<VolunteerEvent> places = VolunteerEventsData.getInstance().getVolunteerEvents();
-        markerEventIdMap = new HashMap<Marker, Integer>((int)((double)places.size()*1.2));
-
-
-
-        for (int i=0;i<places.size();i++)
+        for (int i=0;i<events.size();i++)
         {
-            VolunteerEvent event = places.get(i);
-            String lat = event.getLatitude();
-            String lon = event.getLongitude();
+            VolunteerEvent e = events.get(i);
+            String lat = e.getLatitude();
+            String lon = e.getLongitude();
             LatLng loc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
 
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(loc);
-            //TODO: Postavi ikone na osnovu kategorije
-            //Bitmap icon = VolunteerHTTPHelper.getBitmapFromURL("http://192.168.0.100:3000/users_images/nik.jpeg");
-            //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.volunteer_event));
-            markerOptions.title(event.getName());
-            markerOptions.snippet(event.getDescription());
-            //Marker marker = googleMap.addMarker(markerOptions);
-            //markerEventIdMap.put(marker,i);
+            //TODO: Promeni ikonu
+           // Bitmap eventBmp = VolunteerEventsData.getInstance().getEventByName(event.getDescription()).getImage();
+          //  Bitmap resizedBmp = Bitmap.createScaledBitmap(eventBmp, 60, 60, false);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.event_icon));
+
+            markerOptions.title(e.getName());
+            markerOptions.snippet(e.getDescription());
 
             Marker marker = googleMap.addMarker(markerOptions);
-            markerEventIdMap.put(marker,i);
+            markerEventMap.put(marker,e);
 
         }
     }
 
     private void addFriendPositionsOnMap()
     {
-        ArrayList<Friend> people = FriendsData.getInstance().getPeople();
-        friendIdMap = new HashMap<Marker, Integer>((int)((double)people.size()*1.2));
-
-        for (int i=0;i<people.size();i++)
+        for (int i=0;i<friends.size();i++)
         {
-            Friend person = people.get(i);
-            LatLng latLng = person.getLatLng();
+            Friend f = friends.get(i);
+            LatLng loc = f.getLatLng();
 
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
+            markerOptions.position(loc);
 
-            //ovde trebamo pribaviti sliku osobe i zameniti
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.volunteer_event));
+            //postavlja sliku prijatelja
+            Bitmap friendBmp = f.getImage();
+            Bitmap resizedBmp = Bitmap.createScaledBitmap(friendBmp, 60, 60, false);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizedBmp));
 
-            markerOptions.title(person.getName());
-            markerOptions.snippet(person.getDescription());
+            markerOptions.title(f.getName());
+            markerOptions.snippet(f.getDescription());
+
             Marker marker = googleMap.addMarker(markerOptions);
-            markerEventIdMap.put(marker,i);
+            markerFriendMap.put(marker,f);
+
+
         }
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == EVENT_LOCATION && resultCode ==  RESULT_OK && data!=null)
+        {
+            double latitude = Double.valueOf(data.getStringExtra("lat"));
+            double longitude = Double.valueOf(data.getStringExtra("lon"));
+
+
+            searchEventLoc = new LatLng(latitude,longitude);
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(searchEventLoc, 14);
+            googleMap.animateCamera(cameraUpdate);
+        }
+
+    }
 
     @Override
     public void onDataReady() {
+
+        //set data
+        friends = FriendsData.getInstance().getPeople();
+        markerFriendMap = new HashMap<Marker, Friend>((int)((double)friends.size()*1.2));
+
+        events = VolunteerEventsData.getInstance().getVolunteerEvents();
+        markerEventMap = new HashMap<Marker, VolunteerEvent>((int)((double)events.size()*1.2));
+
+        //add markers
         addVolunteerEventMarkers();
         addFriendPositionsOnMap();
+
+        //VolunteerEventsData.getInstance().findEvents(5000,null,0);
+
+        startService(new Intent(MainActivity.this, VolunteerService.class));
     }
 
+    public VolunteerEvent getEventByMarker(Marker m){
+        return (VolunteerEvent) markerEventMap.get(m);
+    }
+
+    public Friend getFriendByMerker(Marker m){
+        return (Friend) markerFriendMap.get(m);
+    }
+
+
+    public static Location getMyCurrentLocation(){
+        return  mCurrentLocation;
+    }
 
     class LocationUpdateListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location location) {
             // TODO Auto-generated method stub
-         //   Toast.makeText(MainActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+            mCurrentLocation = location;
             // update your marker here
         }
 

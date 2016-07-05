@@ -3,6 +3,8 @@ package project.mosis.volunteerneeded.data;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import project.mosis.volunteerneeded.entities.VolunteerEvent;
 import project.mosis.volunteerneeded.VolunteerHTTPHelper;
@@ -44,6 +46,13 @@ public class VolunteerEventsData {
         new LoadEvents().execute();
     }
 
+    public VolunteerEvent getEventByName(String name){
+      /*  for(int i=0; i< volunteerEvents.size(); i++)
+            if(volunteerEvents.get(i).getDescription().equals(name))
+                return volunteerEvents.get(i);*/
+        return volunteerEvents.get(0);
+      //  return null;
+    }
 
     public void  updateVolunteerEvents()
     {
@@ -51,6 +60,48 @@ public class VolunteerEventsData {
         if(data != null)
             volunteerEvents = data;
     }
+
+
+    public ArrayList<VolunteerEvent> findEvents(final int maxDistance, final String title, int numOfVolunteer){
+
+        ArrayList<VolunteerEvent> result = new ArrayList<>();
+        for(int i=0; i < volunteerEvents.size(); i++){
+            if(volunteerEvents.get(i).meetCriteria(maxDistance,title,numOfVolunteer))
+                result.add(volunteerEvents.get(i));
+        }
+
+
+        Collections.sort(result, new Comparator<VolunteerEvent>() {
+            @Override
+            public int compare(VolunteerEvent lhs, VolunteerEvent rhs) {
+                if(maxDistance != 0) {
+                    if (lhs.getDistance() > rhs.getDistance())
+                        return 1;
+                    else
+                        return -1;
+                }else if(title != null){
+                    return lhs.getTitle().compareTo(rhs.getTitle());
+                }else{
+                    if (lhs.getVolunteersNeeded() > rhs.getVolunteersNeeded())
+                        return 1;
+                    else
+                        return -1;
+                }
+            }
+        });
+        return  result;
+    }
+
+    public VolunteerEvent findEvent(String name)
+    {
+        for(int i=0; i<volunteerEvents.size();i++)
+        {
+            if(volunteerEvents.get(i).getTitle().equals(name))
+                return volunteerEvents.get(i);
+        }
+        return null;
+    }
+
 
     private static class LoadEvents extends AsyncTask<Void, Void, Boolean> {
         private String errorMessage;
@@ -75,10 +126,6 @@ public class VolunteerEventsData {
         @Override
         protected void onPostExecute(final Boolean success) {
         }
-
-
-
-
     }
 
 }

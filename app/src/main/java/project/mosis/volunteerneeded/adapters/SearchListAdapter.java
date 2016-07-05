@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -38,10 +39,10 @@ public class SearchListAdapter extends ArrayAdapter<VolunteerEvent> {
         VolunteerEvent p = getItem(position);
 
         if (p != null) {
-            TextView tt1 = (TextView) v.findViewById(R.id.organizer_name);
+            TextView tt1 = (TextView) v.findViewById(R.id.volunteer_name);
             TextView tt2 = (TextView) v.findViewById(R.id.vevent_title);
-            TextView tt3 = (TextView) v.findViewById(R.id.vevent_prize);
-            TextView tt4 = (TextView) v.findViewById(R.id.vneeded);
+            TextView tt3 = (TextView) v.findViewById(R.id.volunteer_points);
+            TextView tt4 = (TextView) v.findViewById(R.id.searchlist_vneeded);
 
 
 
@@ -68,4 +69,7 @@ public class SearchListAdapter extends ArrayAdapter<VolunteerEvent> {
 
 
     }
+
+
+
 }

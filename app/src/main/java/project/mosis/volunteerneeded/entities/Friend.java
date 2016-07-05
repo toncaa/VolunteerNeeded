@@ -77,6 +77,14 @@ public class Friend {
         String desc = new String("Rank: " + rang + "\n" + "Points: " + volunteeringPoints + "\n");
         return desc;
     }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
 }
 
 

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context="project.mosis.volunteerneeded.VolunteerEventActivity">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +15,7 @@
     tools:context=".search_events.VolunteerEventDetailActivity">
 
     <ImageView
+        android:id="@+id/volunteerEvent_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/v_event"
@@ -48,7 +57,7 @@
 
 
     <TextView
-        android:id="@+id/vevent_prize"
+        android:id="@+id/volunteerEvent_prize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Prize: 50 points"
@@ -98,3 +107,4 @@
 
 
 </LinearLayout>
+    </ScrollView>

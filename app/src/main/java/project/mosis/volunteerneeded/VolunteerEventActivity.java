@@ -101,6 +101,7 @@ public class VolunteerEventActivity extends AppCompatActivity {
                         try{
                             final String message =  addNewVolunteerEvent();
                             guiNotifyUser(message);
+                            finish();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -131,7 +132,10 @@ public class VolunteerEventActivity extends AppCompatActivity {
 
 
          // Toast.makeText(this,"New Volunteer Event added!",Toast.LENGTH_LONG).show();
-         return VolunteerHTTPHelper.addEvent(vEvent);
+          String message = VolunteerHTTPHelper.addEvent(vEvent);
+
+        return message;
+
     }
 
     @Override

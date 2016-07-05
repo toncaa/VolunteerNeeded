@@ -118,6 +118,7 @@ public class DataLoader extends AsyncTask<Void, Void, Void> {
         }
         //cahce it
         saveToInternalStorage(context, eventBmp, eventBitmapName);
+
         //update object
         e.setImage(eventBmp);
     }
@@ -147,6 +148,12 @@ public class DataLoader extends AsyncTask<Void, Void, Void> {
             Log.d(TAG, "io exception");
             e.printStackTrace();
         }
+
+        if(exist(picName)){
+            return "POSTOJI";
+        }
+
+        Bitmap loaded = loadBitmap(context,picName);
         return "OK";
     }
 
@@ -171,10 +178,24 @@ public class DataLoader extends AsyncTask<Void, Void, Void> {
     }
 
     private boolean exist(String filename){
-        File file = new File(filename);
-        if (file.exists())
-            return true;
-        else
-            return false;
+        boolean exist = true;
+        FileInputStream fis = null;
+        try {
+            fis = context.openFileInput(filename);
+            fis.close();
+            exist = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            exist = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            exist = true;
+        }
+
+//        if (exist)
+//            return true;
+//        else
+//            return false;
+        return false;
     }
 }

@@ -33,7 +33,6 @@
             android:icon="@drawable/hand_heart_logo"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +45,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAmq-xQAZCucCqT6ZnXiJEQHCnXBnLw_uY" />
+            android:value="AIzaSyBHoJKcGpWrNrqYSH7ACTpV66V5HdfiT0A" />
 
         <activity android:name=".VolunteerEventActivity" />
         <activity
@@ -58,14 +57,15 @@
         <activity android:name=".search_events.SearchActivity" />
         <activity android:name=".bluetoothscanner.ListActivity" />
         <activity android:name=".HighscoreActivity" />
-        <activity android:name=".MenuActivity" >
-
-
-        </activity>
-
+        <activity android:name=".MenuActivity"></activity>
         <activity android:name=".FriendsActivity" />
         <activity android:name=".search_events.VolunteerEventDetailActivity" />
-        <activity android:name=".search_events.SearchListActivity"></activity>
+        <activity android:name=".search_events.SearchListActivity" />
+
+        <service
+            android:name=".service.VolunteerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

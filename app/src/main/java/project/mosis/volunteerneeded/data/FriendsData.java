@@ -55,4 +55,12 @@ public class FriendsData {
             friends = data;
     }
 
+    public Friend findFriendByName(String name){
+        for(int i=0; i<friends.size(); i++)
+            if(friends.get(i).getName().equals(name))
+                return friends.get(i);
+
+        return friends.get(0);//bolje nego null pointer exception
+    }
+
 }

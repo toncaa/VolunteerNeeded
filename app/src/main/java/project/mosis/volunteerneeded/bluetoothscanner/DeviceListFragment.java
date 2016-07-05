@@ -26,8 +26,11 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 import project.mosis.volunteerneeded.R;
+import project.mosis.volunteerneeded.bluetoothscanner.Connecting.ConnectThread;
+import project.mosis.volunteerneeded.bluetoothscanner.Connecting.ManageConnectThread;
 
 /**
  * A fragment representing a list of Items.
@@ -41,6 +44,11 @@ import project.mosis.volunteerneeded.R;
 public class DeviceListFragment extends Fragment implements AbsListView.OnItemClickListener{
 
     private ArrayList <DeviceItem>deviceItemList;
+
+
+    private static final UUID service_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
+    private ConnectThread client;
 
     private OnFragmentInteractionListener mListener;
     private static BluetoothAdapter bTAdapter;
@@ -111,6 +119,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
         mAdapter = new DeviceListAdapter(getActivity(), deviceItemList, bTAdapter);
 
         Log.d("DEVICELIST", "Adapter created\n");
+
+
+        bTAdapter = BluetoothAdapter.getDefaultAdapter();
+        client = new ConnectThread();
+
     }
 
     @Override
@@ -165,6 +178,15 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
 
         Log.d("DEVICELIST", "onItemClick position: " + position +
                 " id: " + id + " name: " + deviceItemList.get(position).getDeviceName() + "\n");
+        BluetoothDevice addr = bTAdapter.getRemoteDevice(deviceItemList.get(position).getAddress());
+        client.connect(addr,service_UUID);
+        try {
+            int data = ManageConnectThread.receiveData(client.getSocket());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.

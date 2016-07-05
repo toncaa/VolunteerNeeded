@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/title"
+                android:id="@+id/search_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_title"
@@ -42,7 +42,7 @@
 
 
         <NumberPicker
-            android:id="@+id/number_picker_vn"
+            android:id="@+id/search_number_picker_vn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/radius"
+                android:id="@+id/search_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_radius"

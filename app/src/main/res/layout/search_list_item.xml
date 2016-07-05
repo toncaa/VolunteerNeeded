@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:padding="2dp"
     android:background="#124"
     >
 
 
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
 
         <TextView
             android:id="@+id/vevent_title"
@@ -51,7 +44,7 @@
             />
 
         <TextView
-            android:id="@+id/volunteer_rank"
+            android:id="@+id/searchlist_vneeded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Volunteers more: 5"
@@ -72,6 +65,4 @@
             android:textColor="#fff"
             />
 
-
-    </LinearLayout>
 </LinearLayout>
