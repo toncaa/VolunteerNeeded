@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import project.mosis.volunteerneeded.entities.Friend;
 import project.mosis.volunteerneeded.entities.VolunteerEvent;
@@ -51,7 +53,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public LocationManager locationManager;
     public LocationUpdateListener listener;
 
+    private String username;
+
     private LatLng searchEventLoc;
+
+    private Menu menu;
+    private Boolean serviceStarted = false;
 
     private static final int EVENT_LOCATION = 555;
 
@@ -67,9 +74,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         //observer
-        DataLoader dataLoader = new DataLoader(this, LocalMemoryManager.getUsername(this));
+        username = LocalMemoryManager.getUsername(this);
+        DataLoader dataLoader = new DataLoader(this, username);
         dataLoader.addDataListener(this);
         dataLoader.execute();
+
+
 
     }
 
@@ -77,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        this.menu = menu;
+
         return true;
     }
 
@@ -129,10 +142,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivityForResult(intent,EVENT_LOCATION );
         }
+        else if(id == R.id.start_service)
+        {
+            MenuItem serviceItem = menu.findItem(R.id.start_service);
+            if(serviceItem.getTitle().equals("Stop Service"))
+                stopServices();
+            else
+                startServices();
+
+
+            if(serviceStarted)
+                serviceItem.setTitle("Stop Service");
+            else
+                serviceItem.setTitle("Start Service");
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    /*
+        After updating friends in FriendsData
+        updating their locations on map
+     */
+    public void updateFriendMarkers()
+    {
+        FriendsData fdata = FriendsData.getInstance();
+
+        Iterator<Marker> iterator = markerFriendMap.keySet().iterator();
+
+        while(iterator.hasNext())
+        {
+           Marker friendMarker =  iterator.next();
+           Friend friend = fdata.findFriendByName(friendMarker.getTitle());
+            if(friend != null)
+                friendMarker.setPosition(friend.getLatLng());
+        }
+
+    }
 
 
     @Override
@@ -172,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //startuje aktiviti za dodavanje event-a
     private void makeVolunteerCall(LatLng latLng)
     {
-        String lon = Double.toString(latLng.longitude);
-        String lat = Double.toString(latLng.latitude);
+        Double lon = latLng.longitude;
+        Double lat = latLng.latitude;
         Intent makeVolunteerEventIntent = new Intent(this, VolunteerEventActivity.class);
         makeVolunteerEventIntent.putExtra("lon", lon);
         makeVolunteerEventIntent.putExtra("lat", lat);
@@ -208,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
           //  Bitmap resizedBmp = Bitmap.createScaledBitmap(eventBmp, 60, 60, false);
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.event_icon));
 
-            markerOptions.title(e.getName());
+            markerOptions.title(e.getTitle());
             markerOptions.snippet(e.getDescription());
 
             Marker marker = googleMap.addMarker(markerOptions);
@@ -277,8 +325,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //VolunteerEventsData.getInstance().findEvents(5000,null,0);
 
-        startService(new Intent(MainActivity.this, VolunteerService.class));
+
     }
+
+    public void startServices()
+    {
+        Intent intent = new Intent(this, VolunteerService.class);
+
+        if(mCurrentLocation != null){
+            intent.putExtra("lat", mCurrentLocation.getLatitude());
+            intent.putExtra("lon", mCurrentLocation.getLongitude());
+            intent.putExtra("username", username);
+
+
+            startService(intent);
+            serviceStarted = true;
+        }
+
+    }
+
+    public void stopServices()
+    {
+        Intent intent = new Intent(this, VolunteerService.class);
+        getApplicationContext().stopService(intent);
+        serviceStarted= false;
+    }
+
+
 
     public VolunteerEvent getEventByMarker(Marker m){
         return (VolunteerEvent) markerEventMap.get(m);
@@ -301,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Toast.makeText(MainActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
             mCurrentLocation = location;
             // update your marker here
+           // Toast.makeText(MainActivity.this,"Location updated...", Toast.LENGTH_LONG).show();
         }
 
         @Override

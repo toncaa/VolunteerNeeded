@@ -1,77 +1,133 @@
 package project.mosis.volunteerneeded.service;
 
+
+import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import project.mosis.volunteerneeded.HighscoreActivity;
 import project.mosis.volunteerneeded.MainActivity;
+import project.mosis.volunteerneeded.R;
+import project.mosis.volunteerneeded.VolunteerHTTPHelper;
+import project.mosis.volunteerneeded.entities.VolunteerEvent;
+import project.mosis.volunteerneeded.search_events.VolunteerEventDetailActivity;
 
-public class VolunteerService extends Service {
 
+/**
+ * An {@link IntentService} subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ * <p>
+ * TODO: Customize class - update intent actions and extra parameters.
+ */
+public class VolunteerService extends IntentService {
 
-    private final int UPDATE_INTERVAL = 60 * 1000;
-    private Timer timer = new Timer();
-    private static final int NOTIFICATION_EX = 1;
-    private NotificationManager notificationManager;
+    private static final String TAG = VolunteerService.class.getSimpleName();
+    public static final int NOTIFICATION_ID = 234;
 
+    private Boolean serviceRunning = false;
+    private Handler mHandler;
+
+    private Object lock = new Object();
 
     public VolunteerService() {
-    }
-
-
-    @Override
-    public void onCreate() {
-
+        super("VolunteerService");
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public int onStartCommand(Intent intent, int flags, int startId){
+        //onStartCommand se izvršava u Main Threadu
+        //handler koristimo da ono što je odrađeno u pozadini gurnemo na main thread GUI
+        mHandler = new Handler();
+        serviceRunning = true;
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        if (timer != null) {
-           timer.cancel();
-        }
+
+        Toast.makeText(getApplicationContext(), "onDestroy called..." , Toast.LENGTH_SHORT).show();
+        mHandler.removeCallbacksAndMessages(null);
+        serviceRunning = false;
+        //super.onDestroy();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        notificationManager = (NotificationManager)
-                getSystemService(Context.NOTIFICATION_SERVICE);
-        int icon = android.R.drawable.stat_notify_sync;
-        CharSequence tickerText = "Hello";
-        long when = System.currentTimeMillis();
-        Notification notification = new Notification(icon, tickerText, when);
-        Context context = getApplicationContext();
-        CharSequence contentTitle = "My notification";
-        CharSequence contentText = "Hello World!";
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-        //notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-        notificationManager.notify(NOTIFICATION_EX, notification);
-        Toast.makeText(this, "Started!", Toast.LENGTH_LONG);
-        timer.scheduleAtFixedRate(new TimerTask() {
+    protected void onHandleIntent(Intent intent) {
+        //ovo se poziva kada servis dobije start request
 
-            @Override
-            public void run() {
-                // Check if there are updates here and notify if true
-            }
-        }, 0, UPDATE_INTERVAL);
-        return START_STICKY;
+
+        while(serviceRunning)
+        {
+                synchronized(lock) {
+                    try {
+                        lock.wait(15000);
+                        sendUserLocationToServer(intent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+        }
+
     }
 
+    public void sendUserLocationToServer(Intent intent)
+    {
+        final Double lon = intent.getDoubleExtra("lon",0);
+        final Double lat = intent.getDoubleExtra("lat",0);
+        final String username = intent.getStringExtra("username");
 
+        VolunteerEvent volunteerEvent = VolunteerHTTPHelper.updateMyLocation(username,lat, lon);
+        if(volunteerEvent != null)
+            createNotification(volunteerEvent);
+        else
+        {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Nothing still..." , Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+    public void createNotification(VolunteerEvent volunteerEvent){
+
+        //drugi parametar je gde će korisnik biti odveden kada klikne na notifikaciju
+        Intent intent = new Intent(this, VolunteerEventDetailActivity.class);
+        intent.putExtra("title", volunteerEvent.getTitle());
+
+        //taskstackbuilder radi sa stakovima, tako se ređaju aktivitiji
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+        taskStackBuilder.addParentStack(MainActivity.class);
+        taskStackBuilder.addNextIntent(intent);
+
+        //pending intent je onaj koji će se kasnije izvršiti
+        PendingIntent pendingIntent = taskStackBuilder.
+                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //creating notification object
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Event added near you!")
+                .setAutoCancel(true)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, notification);
+
+    }
 }

@@ -60,4 +60,6 @@
 
     <string name="v_highscore">Highscore</string>
 
+    <string name="start_service">Start Service</string>
+    <string name="stop_service">Stop Service</string>
 </resources>

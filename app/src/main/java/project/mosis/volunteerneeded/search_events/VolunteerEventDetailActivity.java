@@ -33,25 +33,25 @@ public class VolunteerEventDetailActivity extends AppCompatActivity {
 
         final VolunteerEvent volunteerEvent = vdata.getEventByName(event_name);
 
-        titleView = (TextView) findViewById(R.id.vevent_title);
+        titleView = (TextView) findViewById(R.id.vevent_detail_vevent_title);
         titleView.setText(volunteerEvent.getTitle());
 
-        organizerView = (TextView) findViewById(R.id.organizer_name);
+        organizerView = (TextView) findViewById(R.id.vevent_detail_organizer_name);
         organizerView.setText("Organizer: " + volunteerEvent.getOrganizerUsername());
 
-        pointsView = (TextView) findViewById(R.id.volunteerEvent_prize);
+        pointsView = (TextView) findViewById(R.id.vevent_detail_prize);
         pointsView.setText("PRIZE: " + String.valueOf(volunteerEvent.getPoints()) + " points");
 
-        vneededView = (TextView) findViewById(R.id.vneeded);
+        vneededView = (TextView) findViewById(R.id.vevent_detail_vneeded);
         vneededView.setText("Volunteers more: " + String.valueOf(volunteerEvent.getVolunteersNeeded()));
 
-        detailView = (TextView) findViewById(R.id.vevent_detail);
+        detailView = (TextView) findViewById(R.id.vevent_detail_detail);
         detailView.setText(volunteerEvent.getDescription());
 
-        vEventImageView = (ImageView) findViewById(R.id.volunteerEvent_image);
+        vEventImageView = (ImageView) findViewById(R.id.vevent_detail_image);
         vEventImageView.setImageBitmap(volunteerEvent.getImage());
 
-        gotoLocBtn = (Button) findViewById(R.id.gotoloc_btn);
+        gotoLocBtn = (Button) findViewById(R.id.vevent_detail_gotoloc_btn);
         gotoLocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

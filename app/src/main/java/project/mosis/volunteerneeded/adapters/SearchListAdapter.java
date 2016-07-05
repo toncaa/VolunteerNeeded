@@ -39,10 +39,10 @@ public class SearchListAdapter extends ArrayAdapter<VolunteerEvent> {
         VolunteerEvent p = getItem(position);
 
         if (p != null) {
-            TextView tt1 = (TextView) v.findViewById(R.id.volunteer_name);
-            TextView tt2 = (TextView) v.findViewById(R.id.vevent_title);
-            TextView tt3 = (TextView) v.findViewById(R.id.volunteer_points);
-            TextView tt4 = (TextView) v.findViewById(R.id.searchlist_vneeded);
+            TextView tt1 = (TextView) v.findViewById(R.id.searchlistitem_orgname);
+            TextView tt2 = (TextView) v.findViewById(R.id.searchlistitem_veventtitle);
+            TextView tt3 = (TextView) v.findViewById(R.id.searchlistitem_points);
+            TextView tt4 = (TextView) v.findViewById(R.id.searchlistitem_vneeded);
 
 
 

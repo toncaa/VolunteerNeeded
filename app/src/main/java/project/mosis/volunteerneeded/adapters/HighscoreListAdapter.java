@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,6 +42,8 @@ public class HighscoreListAdapter extends ArrayAdapter<RankedVolunteer> {
             TextView tt2 = (TextView) v.findViewById(R.id.volunteer_points);
             TextView tt3 = (TextView) v.findViewById(R.id.volunteer_rank);
             TextView tt4 = (TextView) v.findViewById(R.id.volunteer_row_number);
+            ImageView iview = (ImageView) v.findViewById(R.id.volunteer_image);
+
 
             if (tt1 != null) {
                 tt1.setText(p.getName());
@@ -56,6 +59,11 @@ public class HighscoreListAdapter extends ArrayAdapter<RankedVolunteer> {
 
             if (tt4 != null) {
                 tt4.setText(String.valueOf(position + 1) + ".");
+            }
+
+            if (iview != null)
+            {
+                iview.setImageBitmap(p.getImage());
             }
         }
 

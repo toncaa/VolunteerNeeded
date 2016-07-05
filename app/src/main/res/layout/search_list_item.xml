@@ -10,7 +10,7 @@
 
 
         <TextView
-            android:id="@+id/vevent_title"
+            android:id="@+id/searchlistitem_veventtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cleaning office"
@@ -22,7 +22,7 @@
 
 
         <TextView
-            android:id="@+id/volunteer_name"
+            android:id="@+id/searchlistitem_orgname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Organizer: Jova Jović"
@@ -33,7 +33,7 @@
             />
 
         <TextView
-            android:id="@+id/volunteer_points"
+            android:id="@+id/searchlistitem_points"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="PRIZE: 50 points"
@@ -44,7 +44,7 @@
             />
 
         <TextView
-            android:id="@+id/searchlist_vneeded"
+            android:id="@+id/searchlistitem_vneeded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Volunteers more: 5"

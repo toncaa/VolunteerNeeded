@@ -47,11 +47,10 @@ public class VolunteerEventsData {
     }
 
     public VolunteerEvent getEventByName(String name){
-      /*  for(int i=0; i< volunteerEvents.size(); i++)
-            if(volunteerEvents.get(i).getDescription().equals(name))
-                return volunteerEvents.get(i);*/
-        return volunteerEvents.get(0);
-      //  return null;
+      for(int i=0; i< volunteerEvents.size(); i++)
+            if(volunteerEvents.get(i).getTitle().equals(name))
+                return volunteerEvents.get(i);
+       return null;
     }
 
     public void  updateVolunteerEvents()

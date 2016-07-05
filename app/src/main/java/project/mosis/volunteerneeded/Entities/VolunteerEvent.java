@@ -1,10 +1,14 @@
 
 package project.mosis.volunteerneeded.entities;
 import android.graphics.Bitmap;
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import project.mosis.volunteerneeded.MainActivity;
 import project.mosis.volunteerneeded.VolunteerHTTPHelper;
 
 /**
@@ -22,11 +26,14 @@ public class VolunteerEvent {
     private Bitmap image;
     private String imageUrl;
 
+    private LatLng loc;
 
     private String lat;
     private String lon;
 
-    public VolunteerEvent(String organizerUsername, String title, String lon, String lat, String desc,
+    private float distance;
+
+    public VolunteerEvent(String organizerUsername, String title, String lat, String lon, String desc,
                           String time, String category, int volunteersNeeded, Bitmap image)
     {
         this.organizerUsername = organizerUsername;
@@ -40,6 +47,8 @@ public class VolunteerEvent {
         this.image = image;
 
         this.points = this.volunteersNeeded * 2;
+
+        this.loc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
     }
 
     public VolunteerEvent(String organizerUsername, String title, String lat, String lon, String desc,
@@ -55,6 +64,8 @@ public class VolunteerEvent {
         this.category = category;
         this.imageUrl = imageUrl;
         this.points = this.volunteersNeeded * 2;
+
+        this.loc = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
     }
 
     public VolunteerEvent()
@@ -70,9 +81,46 @@ public class VolunteerEvent {
 
 
 
-    public String getName()
-    {
-        return this.title;
+    public boolean meetCriteria(int maxDistance, String title, int numOfVolunteer){
+        boolean distancePass = false, titlePass = false, numOfVolunteerPass=false;
+        float res[] = new float[3];
+        float finalDistance = 0;
+
+        if(maxDistance != 0) {
+            Location userLocation = MainActivity.getMyCurrentLocation();
+            Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
+                    loc.latitude, loc.longitude, res);
+            finalDistance = res[0];
+            if(finalDistance < maxDistance)
+                distancePass = true;
+
+            distance = finalDistance;
+        }else{
+            distancePass = true;
+        }
+
+        if(title.length() == 0) title = null;
+
+        if(title != null) {
+            if (this.title.toLowerCase().contains(title.toLowerCase()))
+                titlePass = true;
+        }else {
+            titlePass = true;
+        }
+
+
+        if(numOfVolunteer != 0) {
+            if (volunteersNeeded > numOfVolunteer)
+                numOfVolunteerPass = true;
+        }else {
+            numOfVolunteerPass = true;
+        }
+
+
+        if(distancePass && numOfVolunteerPass && titlePass)
+            return true;
+        else
+            return false;
     }
 
     public String getDescription()
@@ -122,4 +170,7 @@ public class VolunteerEvent {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public float getDistance(){return this.distance;}
+
 }

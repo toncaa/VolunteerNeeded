@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -61,7 +62,7 @@ public class SearchListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                 Intent eventInfo = new Intent(SearchListActivity.this, VolunteerEventDetailActivity.class);
                 VolunteerEvent volunteerEvent = (VolunteerEvent) mListView.getItemAtPosition(position);
-
+                Toast.makeText(SearchListActivity.this,"Position: "+ position, Toast.LENGTH_LONG).show();
 //                eventInfo.putExtra("desc", volunteerEvent.getDescription());
 //                eventInfo.putExtra("vneeded", volunteerEvent.getVolunteersNeeded());
 //                eventInfo.putExtra("points", volunteerEvent.getPoints());

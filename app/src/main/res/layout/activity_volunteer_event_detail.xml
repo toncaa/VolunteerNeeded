@@ -15,7 +15,7 @@
     tools:context=".search_events.VolunteerEventDetailActivity">
 
     <ImageView
-        android:id="@+id/volunteerEvent_image"
+        android:id="@+id/vevent_detail_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/v_event"
@@ -23,7 +23,7 @@
         />
 
     <TextView
-        android:id="@+id/organizer_name"
+        android:id="@+id/vevent_detail_organizer_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Organizer: Jova Jović"
@@ -34,7 +34,7 @@
         />
 
     <TextView
-        android:id="@+id/vevent_title"
+        android:id="@+id/vevent_detail_vevent_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Title: Cleaning office"
@@ -45,7 +45,7 @@
         />
 
     <TextView
-        android:id="@+id/vneeded"
+        android:id="@+id/vevent_detail_vneeded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Volunteers more: 5"
@@ -57,7 +57,7 @@
 
 
     <TextView
-        android:id="@+id/volunteerEvent_prize"
+        android:id="@+id/vevent_detail_prize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Prize: 50 points"
@@ -68,7 +68,7 @@
         />
 
     <TextView
-        android:id="@+id/vevent_detail_text"
+        android:id="@+id/vevent_detail_detailtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DETAILS"
@@ -79,7 +79,7 @@
         />
 
     <TextView
-        android:id="@+id/vevent_detail"
+        android:id="@+id/vevent_detail_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Okupljanje mladih radi čisćenja prostorija zgrade staračkog doma i druženju sa stanarima doma. "
@@ -92,7 +92,7 @@
         />
 
     <Button
-        android:id="@+id/gotoloc_btn"
+        android:id="@+id/vevent_detail_gotoloc_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"

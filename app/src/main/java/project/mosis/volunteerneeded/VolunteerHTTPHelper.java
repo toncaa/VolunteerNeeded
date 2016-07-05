@@ -258,6 +258,7 @@ public class VolunteerHTTPHelper {
         => returning volunteers sorted by points
      */
 
+
     public static ArrayList<RankedVolunteer> getHighestRankedVolunteers()
     {
         try {
@@ -286,10 +287,10 @@ public class VolunteerHTTPHelper {
                     JSONObject eventObj = eventsArray.getJSONObject(i);
                     RankedVolunteer rankedVolunteer = new RankedVolunteer(
                             eventObj.getString("name"),
-                            eventObj.getString("imageUrl"),
+                            eventObj.getString("username"),
                             eventObj.getString("rank"),
                             eventObj.getInt("points")
-                            );
+                    );
                     rankedVolunteers.add(rankedVolunteer);
                 }
 
@@ -304,6 +305,69 @@ public class VolunteerHTTPHelper {
         return null;
     }
 
+
+
+    private static HttpURLConnection getConnection(String urlAddress) throws IOException {
+        URL url = new URL(urlAddress);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setConnectTimeout(CONNECTION_TIMEOUT);
+        return conn;
+    }
+
+
+    public static VolunteerEvent updateMyLocation(String username, double lat, double lon){
+        ArrayList<String> friends = new ArrayList<>();
+        try {
+            String response;
+            HttpURLConnection conn = getConnection(SERVER_URL + "/updateMyLocation");
+            JSONObject data = new JSONObject();
+            data.put("username",username);
+            data.put("lat",lat);
+            data.put("lon",lon);
+
+            //send data
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            //receive response
+            VolunteerEvent allEvents;
+            int responseCode = conn.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                response = inputStreamToString(conn.getInputStream());
+                //parse response
+                JSONObject resObj = new JSONObject(response);
+                JSONObject eventObj = resObj.getJSONObject("data");
+                if(eventObj.length() == 0)
+                    return  null;
+                VolunteerEvent e = new VolunteerEvent(
+                        eventObj.getString("organizer"),
+                        eventObj.getString("title"),
+                        eventObj.getString("lon"),
+                        eventObj.getString("lat"),
+                        eventObj.getString("desc"),
+                        eventObj.getString("time"),
+                        eventObj.getString("category"),
+                        eventObj.getInt("volunteerNeeded"),
+                        eventObj.getString("image"));
+
+
+
+                return e;
+            }
+        }catch (Exception error){
+            error.printStackTrace();
+        }
+        return null;
+    }
 
     public static ArrayList<Friend> getAllFriends(String username){
         try {
@@ -367,19 +431,6 @@ public class VolunteerHTTPHelper {
 
         return null;
     }
-
-
-    private static HttpURLConnection getConnection(String urlAddress) throws IOException {
-        URL url = new URL(urlAddress);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setConnectTimeout(CONNECTION_TIMEOUT);
-        return conn;
-    }
-
 
     public static String inputStreamToString(InputStream is){
         String line = "";

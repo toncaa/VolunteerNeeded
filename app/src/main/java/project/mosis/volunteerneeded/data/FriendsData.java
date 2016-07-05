@@ -39,6 +39,7 @@ public class FriendsData {
         return singleton;
     }
 
+
     public ArrayList<Friend> getPeople()
     {
         return friends;
@@ -60,7 +61,7 @@ public class FriendsData {
             if(friends.get(i).getName().equals(name))
                 return friends.get(i);
 
-        return friends.get(0);//bolje nego null pointer exception
+       return null;
     }
 
 }
